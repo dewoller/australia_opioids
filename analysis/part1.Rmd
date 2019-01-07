@@ -1,0 +1,109 @@
+---
+title: "Benzo-opioid v2 analysis"
+author:  "Mofi Islam and Dennis Wollersheim "
+date: "2018-04-30"
+output:
+workflowr::wflow_html:
+toc: false
+---
+
+```{r pre_initial, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+rm(list=ls())
+options(width = 200)
+show_code = FALSE
+source("lib/functions.R")
+source("lib/mapping_functions.R")
+source("lib/standardisation.R")
+source("lib/get_data.R")
+source("lib/generate_data_frames.R")
+library('tidyverse')
+opts_chunk$set(echo = FALSE)
+
+```
+
+
+```{r initial, results='hide', message=FALSE, warning=FALSE}
+
+dataset=""
+dataset="_rr"
+
+get_data_from_cache(dataset = dataset)
+
+
+```
+# Methods
+
+The data is from the PBS prescribing data.  In this dataset, we have every opioid and benzodiazepine prescription for a 10% sample of the population, made in the period 2013-2016.  In a single prescription, we have a date of supply, a drug type and strength, and the number of pills.  Using the WHO DDD drug classification, we determine the total DDD for each prescription, and then we estimate the end day of the prescription to be the start day + totalDDD, rounded to the nearest day.  This start and end data comprise the prescription period. 
+
+## Variables
+
+### Independent
+* LGA level variables
+  * SEIFA
+  * urbanisation
+  * census data - english language, 2 person household
+* Person level variables
+  * gender
+  * age groups
+  * drug of choice
+  * user type
+  * lga
+* Script level variables
+  * month of supply
+  * drug type - drug name
+  * benzo type
+  * opioid type
+
+
+### dependent variables
+* benzo and opioid usage (scripts / ddd / number of users / ddd per user / scripts per user  )
+* lga level ddd
+
+
+```{r individual_level_graphs, warning=FALSE}
+
+df %>%
+  inner_join( df_patient ) %>%
+  group_by( supply_month, sex,  ) %>%
+  summarise( n_dose = sum( n_dose ) ) %>%
+  ggplot( aes( supply_month, n_dose, fill=sex )) +
+  geom_col( position='dodge')
+
+df %>%
+  inner_join( df_patient ) %>%
+  group_by( supply_month, sex,  ) %>%
+  summarise( n = n()) %>%
+  ggplot( aes( supply_month, n, fill=sex )) +
+  geom_col( position='dodge')
+
+
+df %>%
+  inner_join( df_patient ) %>%
+  group_by( supply_month, sex,  ) %>%
+  summarise( n = n()) %>%
+  ggplot( aes( supply_month, n, group=sex, color=sex )) +
+  geom_line( ) 
+
+
+
+both_diff( 
+df1 %>% 
+  distinct( lga ),
+df_population %>% distinct( lga )
+)
+
+df1 %>% filter( lga == '18710')
+
+df1 %>% filter( lga == '18710')
+
+df %>%
+  inner_join( df_patient ) %>%
+  filter( lga != '.' ) %>%
+  select_and_standardise_ddd( standardise_over = qc( lga, supply_month )) %>%
+                             ggplot() +
+                               geom_boxplot( mapping=aes_string(x = var1, y= "ddd" , color=var1, fill=var1)) + 
+                               ggtitle( paste("The range of LGA DDD's for each", var1, "facetted by", var2)) +
+                               facet_wrap( as.formula(paste("~", var2)), ncol=2, scales='fixed')
+
+
