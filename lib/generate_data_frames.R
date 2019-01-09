@@ -131,8 +131,9 @@ generate_data_frames = function( dataset='_rr' )
 
 
   df %>% 
-      group_by (pin, sex, age, state, lga, drug_type) %>% 
+      group_by (pin, sex, age, lga, drug_type) %>% 
       summarise( n_dose = sum( n_dose )) %>%
+      mutate( state = get_state_code_from_lga( lga )) %>%
       ungroup() %>%
       spread( drug_type, n_dose, fill=0 ) %>%
       rename( opioid_total_doses = opioid, 
@@ -201,7 +202,7 @@ generate_data_frames = function( dataset='_rr' )
     toc()
     tic ("seperating out benzo/opioid usages")
     df %>% mutate( row=row_number()) %>%
-      select (-sex, -age, -state, -lga) %>% 
+      select (-sex, -age, -lga) %>% 
       { . } -> df 
 
 #    df %>%

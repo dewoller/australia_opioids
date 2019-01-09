@@ -9,7 +9,7 @@ get_continuing_df <- function(
 
   type_code_limit = ifelse( benzo, 10, 9 )
   query  <-  paste0( "
-                    SELECT pin, gender, age, state, lga, item_code, type_code, generic_name  ,
+                    SELECT pin, gender, age, lga, item_code, type_code, generic_name  ,
                     type_name, supply_date, quantity, unit_wt, ddd_mg_factor 
                     FROM continuing." , base_table , " r 
                     JOIN continuing.item i USING (item_code) 

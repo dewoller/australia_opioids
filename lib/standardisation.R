@@ -134,12 +134,19 @@ f_join_population = function( dataset,
       { . } -> rv
 
   }
+  traceback()
   assertthat::assert_that( sum( is.na( rv$population)) == 0, 
-                          msg=paste( "All items in the input dataset must have a population, missing = ", 
-                                    filter( rv, is.na(population)) %>% 
-                                      distinct(lga) %$% 
-                                      lga , 
-                                    collapse=',' 
+                          msg=paste( "All items in the input dataset must have a population, missing = ",
+                                    paste( filter( rv, is.na(population)) %>% distinct(lga) %$% lga , collapse=',' ),
+                                    'available_rollup_vars = ',
+                                    paste( available_rollup_vars, collapse=','),
+                                    'join keys= ',
+                                    paste( join_keys, collapse=','),
+                                    'rollup_level = ',
+                                    paste( rollup_level, collapse=','),
+                                    "population dataset lgas = ", 
+                                    paste( df_population. %$% lga, collapse=','),
+                                    sep='\n'
                                     )
                           )
   rv
@@ -354,6 +361,7 @@ simple_standardise_value_test = function() {
 function () {
 
   #undebug( f_join_population )
+  debug( f_join_population )
 
   standardise_over=qw('sex')
 
