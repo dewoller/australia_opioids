@@ -10,7 +10,7 @@ singleFacetPlot_boxplot = function( df1, var1, var2 ) {
     select_and_standardise_ddd( standardise_over = c("lga", var1, var2 )) %>% 
     ggplot() +
     geom_boxplot( mapping=aes_string(x = var1, y= "ddd" , color=var1, fill=var1)) + 
-    ggtitle( paste("The range of LGA DDD's for each", var1, "facetted by", var2)) +
+    ggtitle( paste("The range of LGA total DDD for each", var1, "facetted by", var2)) +
     facet_wrap( as.formula(paste("~", var2)), ncol=2, scales='fixed')
 }
 
