@@ -91,19 +91,27 @@ df %>%
   inner_join( df_patient, by='pin') %>%
   filter( lga != '.' ) %>%
   select_and_standardise_ddd( standardise_over = qc( lga )) %>% 
-  { . } -> figure_103
+  { . } -> base_figure_103
 
 
-figure_103 %>%
+
+
+base_figure_103 %>%
   inner_join( 
              df_population %>% 
-               distinct( lga, state)
+               filter( supply_year==2013)  %>%
+               group_by( lga, state ) %>%
+               summarise( population = sum( population )), 
              , by='lga' ) %>% 
-    { . } -> figure_103
-
-figure_103 %>%
   filter( !endsWith(lga,  '99' )) %>% 
   { . } -> figure_103
+
+figure_103 %>%
+  mutate( plevel = cut( population, c( 0, 1000, 50000, 100000, 150000, 200000, 99999999999 ) )) %>%
+  distinct( plevel ) %>%
+  ggplot(aes(x = mpg)) +
+  geom_dotplot(stackgroups = TRUE, binwidth = 1, dotsize=mtcars$gear/8, stackratio=2.5,method = "histodot")
+
 
 
 
@@ -121,4 +129,22 @@ geom_den
 
 stat_density
 stat_density
+
+geom_dotplot
+
+```{r}
+
+    ggplot(mtcars, aes(x = 1, y = mpg, fill = factor(cyl))) +
+    geom_dotplot(binaxis = "x", stackgroups = TRUE, dotsize = mtcars$gear, method = "histodot")
+
+  mtcars %>%
+    arrange( gear ) %>%
+  ggplot(aes(x = mpg)) +
+    geom_dotplot(stackgroups = TRUE, binwidth = 1, dotsize=mtcars$gear/8, stackratio=2.5,method = "histodot")
+
+
+  ggplot(mtcars, aes(x = mpg)) +
+    geom_dotplot(binwidth = 1, method = "histodot")
+
+```
 
