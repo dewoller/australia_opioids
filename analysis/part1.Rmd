@@ -25,8 +25,9 @@ opts_chunk$set(echo = FALSE)
 
 ```{r initial, results='hide', message=FALSE, warning=FALSE}
 
-dataset=""
 dataset="_rr"
+dataset=""
+
 
 get_data_from_cache(dataset = dataset)
 
@@ -86,24 +87,38 @@ df %>%
   geom_line( ) 
 
 
-
-both_diff( 
-df1 %>% 
-  distinct( lga ),
-df_population %>% distinct( lga )
-)
-
-df1 %>% filter( lga == '18710')
-
-df1 %>% filter( lga == '18710')
-
 df %>%
-  inner_join( df_patient ) %>%
+  inner_join( df_patient, by='pin') %>%
   filter( lga != '.' ) %>%
-  select_and_standardise_ddd( standardise_over = qc( lga, supply_month )) %>%
-                             ggplot() +
-                               geom_boxplot( mapping=aes_string(x = var1, y= "ddd" , color=var1, fill=var1)) + 
-                               ggtitle( paste("The range of LGA DDD's for each", var1, "facetted by", var2)) +
-                               facet_wrap( as.formula(paste("~", var2)), ncol=2, scales='fixed')
+  select_and_standardise_ddd( standardise_over = qc( lga )) %>% 
+  { . } -> figure_103
 
+
+figure_103 %>%
+  inner_join( 
+             df_population %>% 
+               distinct( lga, state)
+             , by='lga' ) %>% 
+    { . } -> figure_103
+
+figure_103 %>%
+  filter( !endsWith(lga,  '99' )) %>% 
+  { . } -> figure_103
+
+
+
+```
+
+
+State - urbanisation
+There is more variation in rural because rural has smaller towns
+
+asdf
+
+geom_violin
+
+geom_den 
+
+stat_density
+stat_density
 
