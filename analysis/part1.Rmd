@@ -87,14 +87,14 @@ df %>%
   geom_line( ) 
 
 
+```
+```{r figure_103}
+
 df %>%
   inner_join( df_patient, by='pin') %>%
   filter( lga != '.' ) %>%
   select_and_standardise_ddd( standardise_over = qc( lga )) %>% 
   { . } -> base_figure_103
-
-
-
 
 base_figure_103 %>%
   inner_join( 
@@ -103,17 +103,91 @@ base_figure_103 %>%
                group_by( lga, state ) %>%
                summarise( population = sum( population )), 
              , by='lga' ) %>% 
-  filter( !endsWith(lga,  '99' )) %>% 
-  { . } -> figure_103
+filter( !endsWith(lga,  '99' )) %>% 
+{ . } -> figure_103
+
 
 figure_103 %>%
-  mutate( plevel = cut( population, c( 0, 1000, 50000, 100000, 150000, 200000, 99999999999 ) )) %>%
-  distinct( plevel ) %>%
-  ggplot(aes(x = mpg)) +
-  geom_dotplot(stackgroups = TRUE, binwidth = 1, dotsize=mtcars$gear/8, stackratio=2.5,method = "histodot")
+  mutate( ddd_level = cut( ddd, breaks=0:30*5 )) %>%
+  ggplot( aes( x=ddd_level, y=population, fill=state  )) +
+  geom_col() +
+  ggtitle( 'Total Australian population at various DDD levels')
+
+
+```
+
+
+```{r figure_103_age}
+
+df %>%
+  inner_join( df_patient, by='pin') %>%
+  filter( lga != '.' & age!='0-19' ) %>%
+  select_and_standardise_ddd( standardise_over = qc( lga, age )) %>% 
+  { . } -> base_figure_103_age
+
+base_figure_103_age %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' & age!='0-19' ) %>%
+               group_by( lga, state, age ) %>%
+               summarise( population = sum( population )), 
+             , by=c('lga', 'age') ) %>% 
+filter( !endsWith(lga,  '99' )) %>% 
+{ . } -> figure_103_age
+
+
+figure_103_age %>%
+  mutate( ddd_level = cut( ddd, breaks=0:60*2 )) %>%
+  ggplot( aes( x=ddd_level, y=population, fill=state  )) +
+  geom_col() +
+  ggtitle( 'Total Australian population living in LGAs with various DDD levels, 0-19 excluded')+
+  facet_wrap(~age)
+
+figure_103_age %>%
+  mutate( ddd_level = cut( ddd, breaks=0:30*5 )) %>%
+  ggplot( aes( x=ddd_level, y=population, fill=age  )) +
+  geom_col() +
+  ggtitle( 'Total Australian population living in LGAs with various DDD levels, 0-19 excluded')+
+  facet_wrap(~state)
+
+```
 
 
 
+```{r figure_103_sex}
+
+df %>%
+  inner_join( df_patient, by='pin') %>%
+  filter( lga != '.' ) %>%
+  select_and_standardise_ddd( standardise_over = qc( lga, sex )) %>% 
+  { . } -> base_figure_103_sex
+
+base_figure_103_sex %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' ) %>%
+               group_by( lga, state, sex ) %>%
+               summarise( population = sum( population )), 
+             , by=c('lga', 'sex') ) %>% 
+  filter( !endsWith(lga,  '99' )) %>% 
+  { . } -> figure_103_sex
+
+
+figure_103_sex %>%
+  mutate( ddd_level = cut( ddd, breaks=0:20*7 )) %>%
+  ggplot( aes( x=ddd_level, y=population, fill=state  )) +
+  geom_col() +
+  ggtitle( 'Total Australian population living in LGAs with various DDD levels')+
+  facet_wrap(~sex)
+
+figure_103_sex %>%
+  mutate( ddd_level = cut( ddd, breaks=0:30*5 )) %>%
+  ggplot( aes( x=ddd_level, y=population, fill=sex  )) +
+  geom_col() +
+  ggtitle( 'Total Australian population living in LGAs with various DDD levels')+
+  facet_wrap(~state)
 
 ```
 
