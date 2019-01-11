@@ -208,17 +208,24 @@ geom_dotplot
 
 ```{r}
 
-    ggplot(mtcars, aes(x = 1, y = mpg, fill = factor(cyl))) +
-    geom_dotplot(binaxis = "x", stackgroups = TRUE, dotsize = mtcars$gear, method = "histodot")
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% distinct( lga, seifa, urbanization), by='lga' ) %>%
+  filter( lga != '.' ) %>%
+  select_and_standardise_ddd( standardise_over = qc( lga, urbanization )) %>% 
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' ) %>%
+               group_by( lga ) %>%
+               summarise( population = sum( population )), 
+             , by=c('lga') ) %>% 
+             { . } -> a
 
-  mtcars %>%
-    arrange( gear ) %>%
-  ggplot(aes(x = mpg)) +
-    geom_dotplot(stackgroups = TRUE, binwidth = 1, dotsize=mtcars$gear/8, stackratio=2.5,method = "histodot")
-
-
-  ggplot(mtcars, aes(x = mpg)) +
-    geom_dotplot(binwidth = 1, method = "histodot")
+a %>%
+  ggplot(mapping=aes(x = urbanization, y= ddd , color=urbanization, fill=urbanization)) +
+  geom_violin( stat="identity", mapping=aes(violinwidth=.000001*population)) 
+ 
 
 ```
 

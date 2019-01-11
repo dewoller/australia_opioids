@@ -4,6 +4,8 @@
 var1='sex'
 var2='age'
 
+# singleFacetPlot_boxplot   --------------------------------------------------------------
+
 singleFacetPlot_boxplot = function( df1, var1, var2 ) {
 
   df1 %>%
@@ -15,7 +17,7 @@ singleFacetPlot_boxplot = function( df1, var1, var2 ) {
 }
 
 
-# multiplots  --------------------------------------------------------------
+# generate_multiplots --------------------------------------------------------------
 
 generate_multiplots <- function () {
 

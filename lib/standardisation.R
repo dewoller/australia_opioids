@@ -134,7 +134,6 @@ f_join_population = function( dataset,
       { . } -> rv
 
   }
-  traceback()
   assertthat::assert_that( sum( is.na( rv$population)) == 0, 
                           msg=paste( "All items in the input dataset must have a population, missing = ",
                                     paste( filter( rv, is.na(population)) %>% distinct(lga) %$% lga , collapse=',' ),
