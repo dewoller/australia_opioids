@@ -134,13 +134,19 @@ f_join_population = function( dataset,
       { . } -> rv
 
   }
+
   assertthat::assert_that( sum( is.na( rv$population)) == 0, 
                           msg=paste( "All items in the input dataset must have a population, missing = ",
                                     paste( filter( rv, is.na(population)) %>% distinct(lga) %$% lga , collapse=',' ),
+                                          dataset %>%
+                                            anti_join( df_population., by=join_key ) %>%
+                                            select_at( .vars=join_key ) %>%
+                                            distinct() %>%
+                                            toString(),
                                     'available_rollup_vars = ',
                                     paste( available_rollup_vars, collapse=','),
-                                    'join keys= ',
-                                    paste( join_keys, collapse=','),
+                                    'join key= ',
+                                    paste( join_key, collapse=','),
                                     'rollup_level = ',
                                     paste( rollup_level, collapse=','),
                                     "population dataset lgas = ", 

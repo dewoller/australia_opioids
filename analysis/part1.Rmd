@@ -222,10 +222,40 @@ df %>%
              , by=c('lga') ) %>% 
              { . } -> a
 
+
 a %>%
-  ggplot(mapping=aes(x = urbanization, y= ddd , color=urbanization, fill=urbanization)) +
-  geom_violin( stat="identity", mapping=aes(violinwidth=.000001*population)) 
+  filter( !is.na( urbanization )) %>%
+  mutate( ddd_level = cut_interval( ddd, n=50 ) ) %>%
+  group_by( ddd_level,  urbanization ) %>%
+  summarise( population=sum( population ),
+            ddd=median( ddd ) ) %>%
+  ggplot(mapping=aes(x = urbanization, y= ddd, color=urbanization, fill=urbanization)) +
+  geom_violin( stat="identity", mapping=aes(violinwidth=.0000005*population)) 
  
+a %>%
+  filter( !is.na( urbanization )) %>%
+  ggplot(mapping=aes(x = urbanization, y= ddd, color=urbanization, fill=urbanization, weight=population)) +
+  geom_violin( ) 
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% distinct( lga, seifa, urbanization), by='lga' ) %>%
+  filter( lga != '.' & lga != 99399 ) %>%
+  select_and_standardise_ddd( standardise_over = qc( lga, state, sex )) %>% 
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' ) %>%
+               group_by( lga ) %>%
+               summarise( population = sum( population )), 
+             , by=c('lga') ) %>% 
+  { . } -> a
+
+a %>%
+  filter( !is.na( sex )) %>%
+  ggplot(mapping=aes(x = state, y= ddd, color=state, fill=state, weight=population)) +
+  geom_violin( )  +
+  facet_wrap( ~sex )
 
 ```
 

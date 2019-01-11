@@ -4,6 +4,15 @@
 var1='sex'
 var2='age'
 
+df_population %>% 
+  filter( supply_year==2013)  %>%
+  filter( lga != '.' ) %>%
+  group_by( lga ) %>%
+  summarise( population = sum( population )) %>% 
+  { . } -> df_lga_population
+
+
+
 # singleFacetPlot_boxplot   --------------------------------------------------------------
 
 singleFacetPlot_boxplot = function( df1, var1, var2 ) {
@@ -17,6 +26,21 @@ singleFacetPlot_boxplot = function( df1, var1, var2 ) {
 }
 
 
+# singleFacetPlot_violin   --------------------------------------------------------------
+
+singleFacetPlot_violin = function( df1, var1, var2 ) {
+
+  df1 %>%
+    select_and_standardise_ddd( standardise_over = c("lga", var1, var2 )) %>% 
+    inner_join( df_lga_population, by='lga') %>%
+    ggplot(mapping=aes_string(x = var1, y= "ddd", color=var1, fill=var1, weight="population")) +
+    geom_violin( )  +
+    ggtitle( paste("The range of LGA total DDD for each", var1, "facetted by", var2)) +
+    facet_wrap( as.formula(paste("~", var2)), ncol=2, scales='fixed')
+
+}
+
+
 # generate_multiplots --------------------------------------------------------------
 
 generate_multiplots <- function () {
@@ -24,7 +48,7 @@ generate_multiplots <- function () {
   df %>%
     inner_join( df_patient, by='pin' ) %>%
     inner_join( df_population %>% distinct( lga, seifa, urbanization), by='lga' ) %>%
-    filter( lga != '.' ) %>%
+    filter( lga != '.' & lga != 99399 ) %>%
     { . } -> df1
 
 
@@ -39,10 +63,10 @@ generate_multiplots <- function () {
     cat( to_plot[[ i ]][1], to_plot[[ i ]][2], i, "\n")
     plot_list[[i]] <- NA
     if (  intersect( to_plot[[ i ]], qc( age, sex ) ) %>% length() < 2 ) {
-      plot_list[[i]] <- singleFacetPlot_boxplot( df1, to_plot[[ i ]][1], to_plot[[ i ]][2] )
+      plot_list[[i]] <- singleFacetPlot_violin( df1, to_plot[[ i ]][1], to_plot[[ i ]][2] )
     }
 
-    file_name = paste("graphics/boxplot_", to_plot[[ i ]][1], "_", to_plot[[ i ]][2], i, ".tiff", sep="")
+    file_name = paste("graphics/violin_", to_plot[[ i ]][1], "_", to_plot[[ i ]][2], i, ".tiff", sep="")
     tiff(file_name)
     print(plot_list[[i]])
     dev.off()
