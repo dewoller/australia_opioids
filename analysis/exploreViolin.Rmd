@@ -1,0 +1,132 @@
+---
+title: "Benzo-opioid v2 analysis"
+author:  "Mofi Islam and Dennis Wollersheim "
+date: "2018-04-30"
+output:
+workflowr::wflow_html:
+toc: false
+---
+
+```{r pre_initial, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+rm(list=ls())
+options(width = 200)
+show_code = FALSE
+source("lib/functions.R")
+source("lib/mapping_functions.R")
+source("lib/standardisation.R")
+source("lib/get_data.R")
+source("lib/generate_data_frames.R")
+library('tidyverse')
+opts_chunk$set(echo = FALSE)
+
+```
+
+
+```{r initial, results='hide', message=FALSE, warning=FALSE}
+
+dataset="_rr"
+dataset=""
+
+
+get_data_from_cache(dataset = dataset)
+
+
+```
+
+```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
+knitr::include_graphics("graphics/violin_state_urbanization1.tiff")
+```
+
+Indeed, Queensland has higher ddd than the rest of the country (barring tasmania)
+```{r explore , warning=FALSE}
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% distinct( lga, seifa, urbanization), by='lga' ) %>%
+  filter( lga != '.' ) %>%
+  select_and_standardise_ddd( standardise_over = qc( state ))
+
+```
+why are there 2 bumps in queensland?
+
+```{r }
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  filter( state=='QLD' ) %>%
+  inner_join( df_population %>% distinct( lga, seifa, urbanization, lga_name), by='lga' ) %>%
+  filter( lga != '.' ) %>%
+  select_and_standardise_ddd( standardise_over = qc( lga, lga_name, seifa, urbanization )) %>%
+  arrange( ddd ) %>% 
+  { . } -> a
+
+a %>% View
+
+my_db_get_query("select  lga, supply_year, value as lote from  abs_census where measure_id = 'CENSUS_33'", 'mofi') %>%
+    as.tibble() %>% 
+    { . } -> df_lote
+
+qplot( lote, data=df_lote, log='x')
+
+qplot( , data=df_lote, log='x')
+
+a %>%
+  inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
+  arrange( desc( lote ))
+
+
+
+
+a %>%
+  inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
+    ggplot( aes( ddd, lote, color=seifa )) +
+    scale_x_log10() +
+    scale_y_log10() +
+    geom_point()
+
+
+```
+
+```{r }
+```
+
+```{r }
+```
+
+```{r }
+```
+
+```{r }
+```
+
+```{r }
+
+```
+
+```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
+```
+
+```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
+```
+
+```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
+```
+
+```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
+```
+
+```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
+
+
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' ) %>%
+               group_by( lga ) %>%
+               summarise( population = sum( population )), 
+             , by=c('lga') ) %>% 
+  { . } -> a
+
+
+

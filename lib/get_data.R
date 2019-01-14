@@ -79,11 +79,11 @@ my_dbWriteTable <- function ( df, table_name ) {
 # -------------------------------------------------
 
 # -------------------------------------------------
-my_db_get_query <- function ( query ) {
+my_db_get_query <- function ( query, db_name = 'mofi' ) {
 
   # loads the PostgreSQL driver
   drv <- dbDriver("PostgreSQL")
-  con <- dbConnect(drv, dbname = "mofi",
+  con <- dbConnect(drv, dbname = db_name,
           host = "localhost", port = 5432,
           user = "dewoller", password = Sys.getenv("PASSWD") )
   on.exit(dbDisconnect(con))
