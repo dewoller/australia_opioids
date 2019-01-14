@@ -34,6 +34,37 @@ safe_load("tictoc")
 
 
 #################################################################################
+# usage - add '-sadgg' to the end of ggplot string to store the plot in a directory
+# sadgg
+#################################################################################
+
+`-.gg` <- function(e1, e2) e2(e1)
+sadgg <- function ( plot ) {
+  base_dir='~/ggplots/'
+  filetype='png'
+  if( !dir.exists( base_dir ) ) {
+    dir.create( base_dir )
+  }
+
+  list.files( base_dir ) %>%
+    as.tibble() %>%
+    separate(value, into='n', sep="_", extra='drop') %>% 
+    mutate( n=as.numeric(n) ) %>%
+    summarise( maxn=max(n)) %$% maxn %>% 
+    { . } -> maxn
+
+  filename = paste0( sprintf( "%03d_", maxn+1), 
+                    paste( plot$mapping, collapse='_'),
+                    '.', filetype)
+
+  ggsave( filename, plot, device=filetype, path=base_dir)
+
+  #    if( system2('pidof', args='geeqie', stdout='/dev/null') ) {
+  system2( 'geeqie', args=c( '-r', '-t',  paste0( 'file:', base_dir, filename)), wait=FALSE)
+  #    }
+}
+
+#################################################################################
 is_theme_complete = function (x)  {TRUE}  # fix up bug in current tricolore library
 
 # my.year.length  ------------------------------------------------------------------
