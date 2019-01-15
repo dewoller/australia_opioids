@@ -251,10 +251,12 @@ df %>%
       {.}->figure_103_table
 
 figure_103_table %>% 
-  head(20) 
+  head(20) %>%
+  kable()
 
 figure_103_table %>% 
-  tail(20) 
+  tail(20) %>% 
+  kable()
 
 
 
