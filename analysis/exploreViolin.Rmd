@@ -34,9 +34,6 @@ get_data_from_cache(dataset = dataset)
 
 ```
 
-```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
-knitr::include_graphics("graphics/violin_state_urbanization1.tiff")
-```
 
 Indeed, Queensland has higher ddd than the rest of the country (barring tasmania)
 ```{r explore , warning=FALSE}
@@ -50,7 +47,7 @@ df %>%
 ```
 why are there 2 bumps in queensland?
 
-```{r }
+```{r queensland, warning=FALSE  }
 
 df %>%
   inner_join( df_patient, by='pin' ) %>%
@@ -61,15 +58,13 @@ df %>%
   arrange( ddd ) %>% 
   { . } -> a
 
-a %>% View
+ 
 
 my_db_get_query("select  lga, supply_year, value as lote from  abs_census where measure_id = 'CENSUS_33'", 'mofi') %>%
     as.tibble() %>% 
     { . } -> df_lote
 
 qplot( lote, data=df_lote, log='x')
-
-qplot( , data=df_lote, log='x')
 
 a %>%
   inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
@@ -85,48 +80,22 @@ a %>%
     scale_y_log10() +
     geom_point()
 
-
 ```
 
-```{r }
-```
-
-```{r }
-```
-
-```{r }
-```
-
-```{r }
-```
-
-```{r }
-
-```
 
 ```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
-```
+ 
 
-```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
-```
-
-```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
-```
-
-```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
-```
-
-```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
-
-
+a%>%
   inner_join( 
              df_population %>% 
                filter( supply_year==2013)  %>%
                filter( lga != '.' ) %>%
                group_by( lga ) %>%
                summarise( population = sum( population )), 
-             , by=c('lga') ) %>% 
+              by=c('lga') ) %>% 
   { . } -> a
+```
 
 
 

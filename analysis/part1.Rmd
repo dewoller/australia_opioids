@@ -62,7 +62,7 @@ The data is from the PBS prescribing data.  In this dataset, we have every opioi
 * lga level ddd
 
 
-```{r individual_level_graphs, warning=FALSE}
+```{r individual_level_graphs, message=FALSE, warning=FALSE}
 
 df %>%
   inner_join( df_patient ) %>%
@@ -81,14 +81,15 @@ df %>%
 
 df %>%
   inner_join( df_patient ) %>%
-  group_by( supply_month, sex,  ) %>%
+  group_by( supply_month, sex ) %>%
   summarise( n = n()) %>%
   ggplot( aes( supply_month, n, group=sex, color=sex )) +
   geom_line( ) 
 
-
 ```
-```{r figure_103}
+
+
+```{r figure_103, message=FALSE, warning=FALSE}
 
 df %>%
   inner_join( df_patient, by='pin') %>%
@@ -102,7 +103,7 @@ base_figure_103 %>%
                filter( supply_year==2013)  %>%
                group_by( lga, state ) %>%
                summarise( population = sum( population )), 
-             , by='lga' ) %>% 
+              by='lga' ) %>% 
 filter( !endsWith(lga,  '99' )) %>% 
 { . } -> figure_103
 
@@ -117,7 +118,7 @@ figure_103 %>%
 ```
 
 
-```{r figure_103_age}
+```{r figure_103_age, message=FALSE, warning=FALSE}
 
 df %>%
   inner_join( df_patient, by='pin') %>%
@@ -132,7 +133,7 @@ base_figure_103_age %>%
                filter( lga != '.' & age!='0-19' ) %>%
                group_by( lga, state, age ) %>%
                summarise( population = sum( population )), 
-             , by=c('lga', 'age') ) %>% 
+              by=c('lga', 'age') ) %>% 
 filter( !endsWith(lga,  '99' )) %>% 
 { . } -> figure_103_age
 
@@ -155,7 +156,7 @@ figure_103_age %>%
 
 
 
-```{r figure_103_sex}
+```{r figure_103_sex, message=FALSE, warning=FALSE}
 
 df %>%
   inner_join( df_patient, by='pin') %>%
@@ -170,7 +171,7 @@ base_figure_103_sex %>%
                filter( lga != '.' ) %>%
                group_by( lga, state, sex ) %>%
                summarise( population = sum( population )), 
-             , by=c('lga', 'sex') ) %>% 
+              by=c('lga', 'sex') ) %>% 
   filter( !endsWith(lga,  '99' )) %>% 
   { . } -> figure_103_sex
 
@@ -191,71 +192,78 @@ figure_103_sex %>%
 
 ```
 
-
-State - urbanisation
-There is more variation in rural because rural has smaller towns
-
-asdf
-
-geom_violin
-
-geom_den 
-
-stat_density
-stat_density
-
-geom_dotplot
-
-```{r}
+```{r replicate_AAOH_figure_103_actual,  message=FALSE, warning=FALSE}
 
 df %>%
-  inner_join( df_patient, by='pin' ) %>%
-  inner_join( df_population %>% distinct( lga, seifa, urbanization), by='lga' ) %>%
-  filter( lga != '.' ) %>%
-  select_and_standardise_ddd( standardise_over = qc( lga, urbanization )) %>% 
+  inner_join( df_patient,  by='pin' ) %>%
+   filter( lga != '.' & 
+            !endsWith( lga, '99') &
+            drug_type != 'benzodiazepine' &
+            supply_date >= '2013-06-01' & supply_date<'2014-06-01') %>%
+  group_by( lga ) %>%
+  summarise( n = n()) %>%
+  mutate( n = n *10) %>%
   inner_join( 
              df_population %>% 
                filter( supply_year==2013)  %>%
-               filter( lga != '.' ) %>%
-               group_by( lga ) %>%
-               summarise( population = sum( population )), 
-             , by=c('lga') ) %>% 
-             { . } -> a
+               group_by( lga, state, lga_name ) %>%
+               summarise( population = sum( population ))
+             , by='lga' )  %>%
+  mutate( rate = n/population * 100000 ) %>%
+  arrange( rate ) %>%
+  {.}->figure_103_actual
 
-
-a %>%
-  filter( !is.na( urbanization )) %>%
-  mutate( ddd_level = cut_interval( ddd, n=50 ) ) %>%
-  group_by( ddd_level,  urbanization ) %>%
-  summarise( population=sum( population ),
-            ddd=median( ddd ) ) %>%
-  ggplot(mapping=aes(x = urbanization, y= ddd, color=urbanization, fill=urbanization)) +
-  geom_violin( stat="identity", mapping=aes(violinwidth=.0000005*population)) 
+qplot( rate,data=figure_103_actual)
  
-a %>%
-  filter( !is.na( urbanization )) %>%
-  ggplot(mapping=aes(x = urbanization, y= ddd, color=urbanization, fill=urbanization, weight=population)) +
-  geom_violin( ) 
+ ggplot(data = figure_103_actual) +
+geom_dotplot(stackdir = 'center' ,   mapping = aes(x = rate))
+  
+```
+
+```{r pbs precriptions for 2013 -14, message=FALSE, warning=FALSE}
 
 df %>%
-  inner_join( df_patient, by='pin' ) %>%
-  inner_join( df_population %>% distinct( lga, seifa, urbanization), by='lga' ) %>%
-  filter( lga != '.' & lga != 99399 ) %>%
-  select_and_standardise_ddd( standardise_over = qc( lga, state, sex )) %>% 
-  inner_join( 
+  inner_join( df_patient, by='pin') %>%
+  filter( lga != '.' & 
+            !endsWith( lga, '99') &
+            drug_type != 'benzodiazepine' &
+            supply_date >= '2013-06-01' & supply_date<'2014-06-01') %>%
+  group_by( lga ) %>%
+  summarise( n = n()) %>%
+  mutate( n = n *10) %>%
+  arrange( n ) %>% 
+    inner_join( 
              df_population %>% 
                filter( supply_year==2013)  %>%
-               filter( lga != '.' ) %>%
-               group_by( lga ) %>%
-               summarise( population = sum( population )), 
-             , by=c('lga') ) %>% 
-  { . } -> a
-
-a %>%
-  filter( !is.na( sex )) %>%
-  ggplot(mapping=aes(x = state, y= ddd, color=state, fill=state, weight=population)) +
-  geom_violin( )  +
-  facet_wrap( ~sex )
+               group_by( lga, state, lga_name ) %>%
+               summarise( population = sum( population ))
+             , by='lga' ) 
 
 ```
+  
+```{r table_103, message=FALSE, warning=FALSE}
+  
+  base_figure_103 %>%
+      inner_join(figure_103_actual , by='lga') %>%
+      arrange(ddd )  %>%
+      select(lga , lga_name , state , rate , n , ddd ) %>%
+      rename (prescriptions = n) %>%
+      {.}->figure_103_table
+
+figure_103_table %>% 
+  head(20) 
+
+figure_103_table %>% 
+  tail(20) 
+
+
+
+
+  
+  
+```
+
+  
+  
+  
 
