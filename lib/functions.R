@@ -41,7 +41,7 @@ safe_load("tictoc")
 `-.gg` <- function(e1, e2) e2(e1)
 sadgg <- function ( plot ) {
   base_dir='~/ggplots/'
-  filetype='png'
+  filetype='svg'
   if( !dir.exists( base_dir ) ) {
     dir.create( base_dir )
   }

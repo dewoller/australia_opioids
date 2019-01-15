@@ -54,36 +54,57 @@ why are there 2 bumps in queensland?
 
 df %>%
   inner_join( df_patient, by='pin' ) %>%
-  filter( state=='QLD' ) %>%
   inner_join( df_population %>% distinct( lga, seifa, urbanization, lga_name), by='lga' ) %>%
-  filter( lga != '.' ) %>%
-  select_and_standardise_ddd( standardise_over = qc( lga, lga_name, seifa, urbanization )) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc( state, lga, lga_name, seifa, urbanization )) %>%
   arrange( ddd ) %>% 
   { . } -> a
 
 a %>% View
 
 my_db_get_query("select  lga, supply_year, value as lote from  abs_census where measure_id = 'CENSUS_33'", 'mofi') %>%
+  as.tibble() %>% 
+  { . } -> df_lote
+
+my_db_get_query("select  lga, supply_year, value as gini from  abs_census where measure_id = 'INCOME_41'", 'mofi') %>%
     as.tibble() %>% 
-    { . } -> df_lote
+    { . } -> df_gini
 
-qplot( lote, data=df_lote, log='x')
+qplot( lote, data=df_lote, log='x') -sadgg
 
-qplot( , data=df_lote, log='x')
+qplot( ddd, data=a, log='x') -sadgg
 
 a %>%
   inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
   arrange( desc( lote ))
 
 
+a %>%
+  mutate( b=scale( ddd )) %>%
+  ggplot( aes( x=b, fill=factor( seifa)) ) + 
+  geom_dotplot(stackgroups=TRUE )
 
+
+
+  sadgg
+
+scale
 
 a %>%
   inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
-    ggplot( aes( ddd, lote, color=seifa )) +
+  ggplot( aes( ddd, lote, color=urbanization )) +
+  geom_smooth(method = "lm") +
+  scale_x_log10() +
+  scale_y_log10() +
+  geom_point() - sadgg
+
+a %>% inner_join( filter( df_gini, supply_year==2011 ), by='lga') %>%
+    ggplot( aes( ddd, gini, color=seifa )) +
+    geom_smooth(method = "lm") +
     scale_x_log10() +
     scale_y_log10() +
-    geom_point()
+    geom_point()  -sadgg
+
 
 
 ```
