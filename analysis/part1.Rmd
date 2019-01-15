@@ -212,11 +212,14 @@ df %>%
   mutate( rate = n/population * 100000 ) %>%
   arrange( rate ) %>%
   {.}->figure_103_actual
+ 
+  mutate (ddd_level = count(''ddd'))
+
 
 qplot( rate,data=figure_103_actual)
  
  ggplot(data = figure_103_actual) +
-geom_dotplot(stackdir = 'center' ,   mapping = aes(x = rate))
+geom_point(mapping = aes(x = rate , y=n))
   
 ```
 
