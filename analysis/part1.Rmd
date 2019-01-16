@@ -14,6 +14,7 @@ options(width = 200)
 show_code = FALSE
 source("lib/functions.R")
 source("lib/mapping_functions.R")
+source("lib/mapping_paper.R")
 source("lib/standardisation.R")
 source("lib/get_data.R")
 source("lib/generate_data_frames.R")
@@ -93,7 +94,10 @@ df %>%
 
 df %>%
   inner_join( df_patient, by='pin') %>%
-  filter( lga != '.' ) %>%
+  filter( lga != '.'  & 
+         !endsWith( lga, '99') &
+           drug_type != 'benzodiazepine' 
+         ) %>%
   select_and_standardise_ddd( standardise_over = qc( lga )) %>% 
   { . } -> base_figure_103
 
@@ -213,7 +217,6 @@ df %>%
   arrange( rate ) %>%
   {.}->figure_103_actual
  
-  mutate (ddd_level = count(''ddd'))
 
 
 qplot( rate,data=figure_103_actual)
@@ -261,14 +264,19 @@ figure_103_table %>%
   tail(20) %>% 
   kable()
 
-
-
-
-  
   
 ```
 
   
-  
+```{r mapping}
+
+base_figure_103 %>%
+  rename( value = ddd ) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  print_map( )
+
+
+```
+
   
 

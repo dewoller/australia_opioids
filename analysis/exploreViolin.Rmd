@@ -55,7 +55,7 @@ df %>%
   filter( lga != '.' & !endsWith( lga, '99') ) %>%
   select_and_standardise_ddd( standardise_over = qc( state, lga, lga_name, seifa, urbanization )) %>%
   arrange( ddd ) %>% 
-  { . } -> a
+  { . } -> df_lga_ddd
 
  
 
@@ -69,23 +69,38 @@ my_db_get_query("select  lga, supply_year, value as gini from  abs_census where 
 
 qplot( lote, data=df_lote, log='x') -sadgg
 
-a %>%
+df_lga_ddd %>%
   inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
   arrange( desc( lote ))
 
 
-a %>%
+df_lga_ddd %>%
   mutate( b=scale( ddd )) %>%
   ggplot( aes( x=b, fill=factor( seifa)) ) + 
   geom_dotplot(stackgroups=TRUE )
 
 
+```
 
-  sadgg
+range of lga total population adjusted ddd
 
-scale
+what do we want to know?
 
-a %>%
+What is happening in QLD
+Why is QLD different?
+
+what aspects are QLD different
+
+compare QLD to rest of australia, violin plot every variable 
+
+ 
+
+
+
+```{r test}
+
+
+df_lga_ddd %>%
   inner_join( filter( df_lote, supply_year==2011 ), by='lga') %>%
   ggplot( aes( ddd, lote, color=urbanization )) +
   geom_smooth(method = "lm") +
@@ -93,7 +108,7 @@ a %>%
   scale_y_log10() +
   geom_point() - sadgg
 
-a %>% inner_join( filter( df_gini, supply_year==2011 ), by='lga') %>%
+df_lga_ddd %>% inner_join( filter( df_gini, supply_year==2011 ), by='lga') %>%
     ggplot( aes( ddd, gini, color=seifa )) +
     geom_smooth(method = "lm") +
     scale_x_log10() +
@@ -107,7 +122,7 @@ a %>% inner_join( filter( df_gini, supply_year==2011 ), by='lga') %>%
 ```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
  
 
-a%>%
+df_lga_ddd%>%
   inner_join( 
              df_population %>% 
                filter( supply_year==2013)  %>%
@@ -115,7 +130,10 @@ a%>%
                group_by( lga ) %>%
                summarise( population = sum( population )), 
               by=c('lga') ) %>% 
-  { . } -> a
+
+
+
+
 ```
 
 
