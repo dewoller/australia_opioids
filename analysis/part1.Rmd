@@ -272,8 +272,34 @@ figure_103_table %>%
 
 base_figure_103 %>%
   rename( value = ddd ) %>%
-  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>% 
+  { . } -> df_map
+
+
   print_map( )
+
+
+  base_map =  get_australia_base_map(1:8)
+
+  df_map %>%
+    select( lga, value ) %>%
+    append_data( base_map, 
+                ., 
+                key.shp="LGA_CODE11", 
+                key.data="lga" 
+                )  %>%
+    {.} -> df_geom_map
+
+  df_geom_map %>%
+    tm_shape( ) + 
+    tm_polygons( "value", 
+                title = title,
+                palette = map_color_set_1 ,
+                showNA=FALSE,
+                colorNA='#FFFFFF'
+                ) +
+tm_shape( states_outline_map) + 
+tm_borders(  alpha=1, col="#000000"  ) 
 
 
 ```

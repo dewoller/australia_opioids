@@ -116,7 +116,16 @@ print_map_list= function( map_list )  {
 
 
 ##################################################################
-generate_map = function( df_map, title, filename, inset_states, states_outline_map)  {
+generate_map = function( df_map
+                        , 
+                        title=''
+                        , 
+                        filename=''
+                        , 
+                        inset_states=vector()
+                        , 
+                        states_outline_map = get_australia_states_map( 1 )
+                        )   {
 
   line_color = 'green'
 #
