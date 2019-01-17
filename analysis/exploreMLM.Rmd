@@ -54,36 +54,20 @@ df  %>%
 
 df_mlm %>% 
   filter( drug_type=='opioid' ) %>%
+  ungroup() %>%
 	mutate( 
        sex = factor( sex ), 
        age = factor( age ), 
        lga = factor( lga ), 
-       state_name = factor( state_name ), 
+       state= factor( state), 
 	   class_name = factor( class_name ), 
 	   class_subset = factor( class_subset ), 
        seifa = factor( seifa ), 
-       urbanization = factor( urbanization ), 
-       sex = relevel( sex, ref=2),
-       seifa = relevel( seifa, ref=4),
-       urbanization = relevel( urbanization, ref=2)
+       urbanization = factor( urbanization )
  ) %>% 
 { . } -> df_mlm_opioid
 
 df_mlm_opioid %>%
-   lme4::lmer( n_doses ~ age + sex + seifa + (1|urbanization)  + (1|class_subset) + (1|class_name) + (1|lga), 
+   lme4::lmer( n_dose ~ age + sex + seifa + (1|urbanization)  + (1|class_subset) + (1|class_name) + (1|lga), 
               data=. )->d
 
-<Paste>
-
-i  mutate( 
-          sex = factor( sex ), 
-          age = factor( age ), 
-          lga = factor( lga ), 
-          state_name = factor( state_name ), 
-          seifa = factor( seifa ), 
-          urbanization = factor( urbanization ), 
-          sex = relevel( sex, ref=2),
-          seifa = relevel( seifa, ref=4),
-          urbanization = relevel( urbanization, ref=2) ) %>% 
-{ . } -> df_match_1
-i
