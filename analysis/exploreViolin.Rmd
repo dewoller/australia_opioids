@@ -53,10 +53,33 @@ df %>%
   inner_join( df_patient, by='pin' ) %>%
   inner_join( df_population %>% distinct( lga, seifa, urbanization, lga_name), by='lga' ) %>%
   filter( lga != '.' & !endsWith( lga, '99') ) %>%
-  select_and_standardise_ddd( standardise_over = qc( state, lga, lga_name, seifa, urbanization )) %>%
-  arrange( ddd ) %>% 
+  select_and_standardise_ddd( standardise_over = qc( state, lga )) %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' & !endsWith( lga, '99') ) %>%
+               mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
+               filter( class_type != 'UCC' & class_type != 'RSG') %>%
+               group_by( lga, lga_name, seifa, class_name, class_subset, urbanization  ) %>%
+               summarise( population = sum( population )), 
+             by=c('lga') ) %>% 
   { . } -> df_lga_ddd
 
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% distinct( lga, seifa, urbanization, lga_name), by='lga' ) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc( state, lga , drug_type )) %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' & !endsWith( lga, '99') ) %>%
+               mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
+               filter( class_type != 'UCC' & class_type != 'RSG') %>%
+               group_by( lga, lga_name, seifa, class_name, class_subset, urbanization  ) %>%
+               summarise( population = sum( population )), 
+             by=c('lga') ) %>% 
+  { . } -> df_lga_ddd_drug_type
  
 
 my_db_get_query("select  lga, supply_year, value as lote from  abs_census where measure_id = 'CENSUS_33'", 'mofi') %>%
@@ -86,15 +109,6 @@ range of lga total population adjusted ddd
 
 what do we want to know?
 
-What is happening in QLD
-Why is QLD different?
-
-what aspects are QLD different
-
-compare QLD to rest of australia, violin plot every variable 
-
- 
-
 
 
 ```{r test}
@@ -119,22 +133,77 @@ df_lga_ddd %>% inner_join( filter( df_gini, supply_year==2011 ), by='lga') %>%
 ```
 
 
+What is happening in QLD
+Why is QLD different?
+
+what aspects are QLD different
+
+QLD urban is different
+ - many remote areas
+  - urban regional very large  - consistently high 
+
+urbanization x state
+
 ```{r state_urbanization, echo=FALSE, fig.cap="state x urbanization", out.width = '100%'}
  
 
-df_lga_ddd%>%
-  inner_join( 
-             df_population %>% 
-               filter( supply_year==2013)  %>%
-               filter( lga != '.' ) %>%
-               group_by( lga ) %>%
-               summarise( population = sum( population )), 
-              by=c('lga') ) %>% 
+
+df_lga_ddd %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_name)) -sadgg
+
+df_lga_ddd %>%
+  filter( startsWith( as.character( urbanization), 'R')) %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_name)) + 
+  facet_wrap(~class_name)  -sadgg
+
+df_lga_ddd %>%
+  filter( startsWith( as.character( urbanization), 'U')) %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_name)) + 
+  facet_wrap(~class_name)  -sadgg
 
 
+df_lga_ddd_drug_type %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_name), size=.1) + 
+  facet_wrap( ~drug_type ) -sadgg
 
+df_lga_ddd_drug_type %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_name), size=.1) + 
+  facet_grid( urbanization~drug_type ) -sadgg
+
+
+df_lga_ddd_drug_type %>%
+  ggplot(aes(urbanization, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_subset), size=.1) + 
+  facet_grid( drug_type ~ state ) +
+  ggtitle( 'benzo and opioid comparison, country vs city' ) -sadgg 
+
+df_lga_ddd_drug_type %>%
+  filter( startsWith( as.character( urbanization), 'R')) %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_subset), size=.1) + 
+  facet_grid(drug_type ~class_subset)  -sadgg
+
+df_lga_ddd_drug_type %>%
+  filter( startsWith( as.character( urbanization), 'U')) %>%
+  ggplot(aes(state, ddd)) +
+  geom_violin(colour = "grey50", mapping=aes(weight=population)) +
+  geom_jitter( aes( color = class_subset)) + 
+  facet_wrap(~class_subset)  -sadgg
 
 ```
 
 
+Look at individual totals per year
 

@@ -1,0 +1,26 @@
+
+
+```{r multilevel_modelling}
+
+foreign::read.dta( 'data/nobackup/match_multiyear.v2.dta' ) %>%
+  as.tibble() %>% 
+  { . } -> df_match
+
+
+foreign::read.dta( 'data/nobackup/match_single_period.v1.dta' ) %>%
+  as.tibble() %>% 
+  { . } -> df_match_1
+
+df  %>%
+  mutate( 
+         sex = factor( sex ), 
+         age = factor( age ), 
+         lga = factor( lga ), 
+         state_name = factor( state_name ), 
+         seifa = factor( seifa ), 
+         urbanization = factor( urbanization ), 
+         sex = relevel( sex, ref=2),
+         seifa = relevel( seifa, ref=4),
+         urbanization = relevel( urbanization, ref=2) ) %>% 
+  { . } -> df_match_1
+

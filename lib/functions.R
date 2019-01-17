@@ -52,15 +52,20 @@ sadgg <- function ( plot ) {
     mutate( n=as.numeric(n) ) %>%
     summarise( maxn=max(n)) %$% maxn %>% 
     { . } -> maxn
+  if (maxn==-Inf) { maxn=0}    
 
   filename = paste0( sprintf( "%03d_", maxn+1), 
                     paste( plot$mapping, collapse='_'),
                     '.', filetype)
 
   ggsave( filename, plot, device=filetype, path=base_dir)
+  print(plot)
+  #svgPanZoom( plot )
 
   #    if( system2('pidof', args='geeqie', stdout='/dev/null') ) {
   system2( 'geeqie', args=c( '-r', '-t',  paste0( 'file:', base_dir, filename)), wait=FALSE)
+  #system2( 'firefox', args=c( paste0(  base_dir, filename)), wait=FALSE)
+  #system2( 'display', args=c( paste0(  base_dir, filename)), wait=FALSE)
   #    }
 }
 
