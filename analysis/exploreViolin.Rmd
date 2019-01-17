@@ -202,8 +202,65 @@ df_lga_ddd_drug_type %>%
   geom_jitter( aes( color = class_subset)) + 
   facet_wrap(~class_subset)  -sadgg
 
-```
 
+df_population %>%
+distinct( lga_name, class_name, state ) %>%
+filter( state=='VIC'  ) %>%
+arrange( class_name ) %>% View
+
+
+
+
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% 
+               filter( lga != '.' & !endsWith( lga, '99') ) %>%
+               mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
+               distinct( lga, lga_name, seifa, class_name, class_subset, urbanization  ) ,
+             by=c('lga') ) %>% 
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc( state, class_subset )) %>% 
+  { . } -> df_state_class_ddd
+
+
+df_state_class_ddd %>%
+  ggplot(aes(state, ddd, fill=class_subset)) +
+  geom_col() 
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% 
+             filter( lga != '.' & !endsWith( lga, '99') ) %>%
+             mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
+             distinct( lga, lga_name, seifa, class_name, class_subset, urbanization  ) ,
+           by=c('lga') ) %>% 
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc( state, class_subset )) %>% 
+  { . } -> df_state_class_ddd
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc( state, lga )) %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' & !endsWith( lga, '99') ) %>%
+               mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
+               filter( class_type != 'UCC' & class_type != 'RSG') %>%
+               group_by( lga, lga_name, seifa, class_name, class_subset, urbanization,area_albers_sqkm ) %>%
+               summarise( population = sum( population )) %>%
+               mutate ( pp_sq_km = population / area_albers_sqkm), 
+             by=c('lga') ) %>% 
+  { . } -> df_lga_ddd_sqkm
+
+df_lga_ddd_sqkm %>%
+  ggplot(aes(pp_sq_km, ddd, color=class_subset)) +
+  scale_x_log10() +
+  geom_point()  + 
+  geom_smooth( aes( pp_sq_km, ddd, color='1'))
+```
 
 Look at individual totals per year
 

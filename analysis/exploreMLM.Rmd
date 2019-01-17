@@ -1,26 +1,89 @@
+---
+title: "Benzo-opioid v2 analysis"
+author:  "Mofi Islam and Dennis Wollersheim "
+date: "2018-04-30"
+output:
+workflowr::wflow_html:
+toc: false
+---
+
+```{r pre_initial, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+rm(list=ls())
+options(width = 200)
+show_code = FALSE
+source("lib/functions.R")
+source("lib/mapping_functions.R")
+source("lib/standardisation.R")
+source("lib/get_data.R")
+source("lib/generate_data_frames.R")
+library('tidyverse')
+opts_chunk$set(echo = FALSE)
+
+```
+
+```{r initial, results='hide', message=FALSE, warning=FALSE}
+
+dataset="_rr"
+dataset=""
+
+
+get_data_from_cache(dataset = dataset)
+
+
+```
 
 
 ```{r multilevel_modelling}
 
-foreign::read.dta( 'data/nobackup/match_multiyear.v2.dta' ) %>%
-  as.tibble() %>% 
-  { . } -> df_match
-
-
-foreign::read.dta( 'data/nobackup/match_single_period.v1.dta' ) %>%
-  as.tibble() %>% 
-  { . } -> df_match_1
 
 df  %>%
-  mutate( 
-         sex = factor( sex ), 
-         age = factor( age ), 
-         lga = factor( lga ), 
-         state_name = factor( state_name ), 
-         seifa = factor( seifa ), 
-         urbanization = factor( urbanization ), 
-         sex = relevel( sex, ref=2),
-         seifa = relevel( seifa, ref=4),
-         urbanization = relevel( urbanization, ref=2) ) %>% 
-  { . } -> df_match_1
+  inner_join( df_patient, by='pin' ) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' & !endsWith( lga, '99') ) %>%
+               mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
+               group_by( lga, lga_name, seifa, class_name, class_subset, urbanization  ) %>%
+               summarise( population = sum( population )), 
+             by=c('lga') ) %>% 
+  group_by( drug_type, pin, sex, age, lga, state, seifa, urbanization, class_subset, class_name ) %>%
+  summarise(n_dose = sum( n_dose ) )%>%
+  { . } -> df_mlm
 
+df_mlm %>% 
+  filter( drug_type=='opioid' ) %>%
+	mutate( 
+       sex = factor( sex ), 
+       age = factor( age ), 
+       lga = factor( lga ), 
+       state_name = factor( state_name ), 
+	   class_name = factor( class_name ), 
+	   class_subset = factor( class_subset ), 
+       seifa = factor( seifa ), 
+       urbanization = factor( urbanization ), 
+       sex = relevel( sex, ref=2),
+       seifa = relevel( seifa, ref=4),
+       urbanization = relevel( urbanization, ref=2)
+ ) %>% 
+{ . } -> df_mlm_opioid
+
+df_mlm_opioid %>%
+   lme4::lmer( n_doses ~ age + sex + seifa + (1|urbanization)  + (1|class_subset) + (1|class_name) + (1|lga), 
+              data=. )->d
+
+<Paste>
+
+i  mutate( 
+          sex = factor( sex ), 
+          age = factor( age ), 
+          lga = factor( lga ), 
+          state_name = factor( state_name ), 
+          seifa = factor( seifa ), 
+          urbanization = factor( urbanization ), 
+          sex = relevel( sex, ref=2),
+          seifa = relevel( seifa, ref=4),
+          urbanization = relevel( urbanization, ref=2) ) %>% 
+{ . } -> df_match_1
+i
