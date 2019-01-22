@@ -40,20 +40,47 @@ get_data_from_cache(dataset = dataset)
 df  %>%
   inner_join( df_patient, by='pin' ) %>%
   filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  group_by(  pin, sex, age, drug_type, lga, state   ) %>%
+  summarise(n_dose = sum( n_dose ) )%>%
+  spread( drug_type, n_dose ) %>%
+  rename( n_dose_opioid = opioid, 
+         n_dose_benzo = benzodiazepine ) %>%
+  mutate_if( is_numeric, function(x) { ifelse( is.na( x ), 0, x ) } ) %>%
   inner_join( 
              df_population %>% 
                filter( supply_year==2013)  %>%
                filter( lga != '.' & !endsWith( lga, '99') ) %>%
-               mutate( class_subset = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  )) %>%
-               group_by( lga, lga_name, seifa, class_name, class_subset, urbanization  ) %>%
-               summarise( population = sum( population )), 
+               mutate( urbanization7 = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  ), 
+                      ifelse( urbanization7=='Rural Agriculture', 'Rural Agricultural', urbanization7)) %>%
+               rename( urbanization22 = class_name ) %>%
+               rename( urbanization2 = urbanization ) %>%
+               group_by( lga, lga_name, seifa, urbanization2, urbanization7, urbanization22  ) %>%
+               summarise( population_2013 = sum( population )), 
              by=c('lga') ) %>% 
-  group_by( drug_type, pin, sex, age, lga, state, seifa, urbanization, class_subset, class_name ) %>%
-  summarise(n_dose = sum( n_dose ) )%>%
+ inner_join( df_patient_usage, ) %>%
+ ungroup() %>%
   { . } -> df_mlm
+
+foreign::write.dta(df_mlm, '/store/aarnet_owncloud/Sharing_between_mofi_and_dennis/Opioid/Opioid/new_vs_continuing/AllAustralia.dta')
+
 
 df_mlm %>% 
   filter( drug_type=='opioid' ) %>%
+  ungroup() %>%
+  mutate( 
+         sex = factor( sex ), 
+         age = factor( age ), 
+         lga = factor( lga ), 
+         state= factor( state), 
+         class_name = factor( class_name ), 
+         class_subset = factor( class_subset ), 
+         seifa = factor( seifa ), 
+         urbanization = factor( urbanization )
+         ) %>% 
+  { . } -> df_mlm_opioid
+
+df_mlm %>% 
+  filter( drug_type!='opioid' ) %>%
   ungroup() %>%
 	mutate( 
        sex = factor( sex ), 
@@ -65,9 +92,22 @@ df_mlm %>%
        seifa = factor( seifa ), 
        urbanization = factor( urbanization )
  ) %>% 
-{ . } -> df_mlm_opioid
+{ . } -> df_mlm_benzo
 
 df_mlm_opioid %>%
-   lme4::lmer( n_dose ~ age + sex + seifa + (1|urbanization)  + (1|class_subset) + (1|class_name) + (1|lga), 
+  lme4::lmer( n_dose ~ age + sex + seifa + (1|urbanization)  + (1|class_subset) + (1|class_name) + (1|lga), 
+             data=. )->d
+
+df_mlm_opioid %>%
+  lme4::lmer( n_dose ~ age + sex + seifa + urbanization + class_subset + (1|state) + (1|lga), 
+             data=. )->d
+
+
+df_mlm_benzo %>%
+   lme4::lmer( n_dose ~ age + sex + seifa + urbanization + class_subset + (1|state) + (1|lga), 
               data=. )->d
 
+
+exp( lme4::fixef( d ))
+
+d

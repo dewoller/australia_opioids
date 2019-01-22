@@ -21,7 +21,7 @@ source("lib/get_data.R")
 source("lib/generate_data_frames.R")
 library('tidyverse')
 opts_chunk$set(echo = FALSE)
-
+opts_chunk$set(fig.width=12, fig.height=8) 
 
 ```
 
@@ -268,9 +268,9 @@ df_mlm %>%
   ungroup() %>%
   { . } -> df_tograph
 
-df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread( age, pct ) %>% 
+#  kable( )
 
 df_tograph %>%
   ggplot(  aes( opioid_usage_category, pct, color=age, group=age )) + 
@@ -291,9 +291,9 @@ df_mlm %>%
   ungroup() %>%
   { . } -> df_tograph
 
-df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread( age, pct ) %>% 
+#  kable( )
 
 df_tograph %>%
   ggplot(  aes( benzo_usage_category, pct, color=age, group=age )) + 
@@ -318,9 +318,9 @@ df %>%
   summarise( ddd = mean( ddd ) ) %>% 
   { . } -> df_tograph
 
-df_tograph %>%
-  spread( type_name, ddd ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread( type_name, ddd ) %>% 
+#  kable( )
 
 df_tograph %>%
   ungroup() %>%
@@ -352,9 +352,9 @@ df %>%
   summarise( ddd = mean( ddd ) ) %>% 
   { . } -> df_tograph
 
-df_tograph %>%
-  spread(opioid_usage_category, ddd ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread(opioid_usage_category, ddd ) %>% 
+#  kable( )
 
 df_tograph %>%
   ungroup() %>%
@@ -377,9 +377,9 @@ df %>%
   summarise( ddd = mean( ddd ) ) %>% 
   { . } -> df_tograph
 
-df_tograph %>%
-  spread(benzo_usage_category, ddd ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread(benzo_usage_category, ddd ) %>% 
+#  kable( )
 
 df_tograph %>%
   ungroup() %>%
@@ -413,9 +413,9 @@ df %>%
   summarise( ddd = mean( ddd ) ) %>% 
   { . } -> df_tograph
 
-df_tograph %>%
-  spread(type_name, ddd ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread(type_name, ddd ) %>% 
+#  kable( )
 
 df_tograph %>%
   ungroup() %>%
@@ -437,9 +437,9 @@ df %>%
   summarise( ddd = mean( ddd ) ) %>% 
   { . } -> df_tograph
 
-df_tograph %>%
-  spread(type_name, ddd ) %>% 
-  kable( )
+#df_tograph %>%
+#  spread(type_name, ddd ) %>% 
+#  kable( )
 
 df_tograph %>%
   ungroup() %>%
