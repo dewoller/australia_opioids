@@ -1,6 +1,6 @@
 
 ---
-title: "Benzo-opioid v2 analysis"
+title: "All Australia Benzo and Opioid Basic Stats"
 author:  "Mofi Islam and Dennis Wollersheim "
 date: "2018-04-30"
 output:
@@ -86,9 +86,10 @@ The data is from the PBS prescribing data.  In this dataset, we have every opioi
 ### dependent variables
 * benzo and opioid usage (scripts / ddd / number of users / ddd per user / scripts per user  )
 * lga level ddd
+* usage category
 
 
-
+# Number of users using for number of quarters, for both drug categories
 
 ```{r nquarter }
 
@@ -106,14 +107,14 @@ df_nquarter %>% kable()
 df_nquarter %>%
   select( -ends_with('n_quarter')) %>%
   gather( type, pct, -nquarter )  %>%
-  ggplot( aes( pct,nquarter, color=type )) + geom_point() + geom_path()
+  ggplot( aes( pct,nquarter, color=type )) + 
+  geom_point() + 
+  geom_path()
 
 
 ```
+# Percentages of of users within drug category by age group
 
-
-
-Overall combined, percentages of each category
 ```{r quarters_by_age}
 
 df_mlm %>%
@@ -127,14 +128,14 @@ df_mlm %>%
   { . } -> df_tograph
 
 df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
-
-df_tograph %>%
   ggplot(  aes( color=opioid_usage_category, pct, x=age, group=opioid_usage_category )) + 
   geom_point() + 
   geom_path() +
-  ggtitle( 'overall combined opioid pct by age group and usage category ')
+  ggtitle( 'opioid number of users percentage of each usage category by age group ')
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
 
 
 
@@ -149,14 +150,14 @@ df_mlm %>%
   { . } -> df_tograph
 
 df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
-
-df_tograph %>%
   ggplot(  aes( color=benzo_usage_category, pct, x=age, group=benzo_usage_category )) + 
   geom_point() + 
   geom_path() +
-  ggtitle( 'overall combined benzo pct by age group and usage category ')
+  ggtitle( 'benzo number of users percentage of each  usage category by age group ')
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
 
 
 df_mlm %>%
@@ -170,20 +171,21 @@ df_mlm %>%
   { . } -> df_tograph
 
 df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
-
-df_tograph %>%
   ggplot(  aes( color=both_category, pct, x=age, group=both_category )) + 
   geom_point() + 
   geom_path() +
-  ggtitle( 'overall combined both pct by age group and usage category ')
+  ggtitle( 'both Opioid and benzo number of users percentage of each  usage category by age group ')
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
 
 
 ```
 
 
-Overall combined, percentages of each age group
+# Number of users percentages of age group by usage category
+
 ```{r quarters_by_age_v1}
 
 df_mlm %>%
@@ -197,14 +199,14 @@ df_mlm %>%
   { . } -> df_tograph
 
 df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
-
-df_tograph %>%
   ggplot(  aes( opioid_usage_category, pct, color=age, group=age )) + 
   geom_point() + 
   geom_path() +
-  ggtitle( 'overall combined opioid pct by age group and usage category ')
+  ggtitle( 'opioid percentage of each age group by  usage category ')
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
 
 
 df_mlm %>%
@@ -218,14 +220,15 @@ df_mlm %>%
   { . } -> df_tograph
 
 df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
-
-df_tograph %>%
   ggplot(  aes( benzo_usage_category, pct, color=age, group=age )) + 
   geom_point() + 
   geom_path() +
-  ggtitle( 'overall combined benzo pct by age group and usage category ')
+  ggtitle( 'benzo percentage of each age group by  usage category ')
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
 
 df_mlm %>%
   select( age, state, ends_with('category')) %>%
@@ -238,20 +241,18 @@ df_mlm %>%
   { . } -> df_tograph
 
 df_tograph %>%
-  spread( age, pct ) %>% 
-  kable( )
-
-df_tograph %>%
   ggplot(  aes( both_category, pct, color=age, group=age )) + 
   geom_point() + 
   geom_path() +
-  ggtitle( 'overall combined both (double dipper benzo and opioid in same quarter) pct by age group and usage category ')
+  ggtitle( 'both opioid  and benzo percentage of each age group by  usage category ')
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
 
 ```
 
-
-
-Overall combined, percentages of each category by state 
+# Number of users  percentages of usage category by state for each age group
 
 ** this should be standardized because population distribution varies so much between states
 
@@ -304,7 +305,7 @@ df_tograph %>%
 
 ```
 
-ddd of each drug type by state  and usage category
+# ddd of each drug type by state  and usage category
 
 ```{r ddd_and_type_by_state_usage}
 
@@ -333,9 +334,6 @@ df_tograph %>%
 
 
 ```
-
-
-
 
 # ddd per month for each state and age group
 state mean from lga level standardisation
@@ -393,11 +391,6 @@ df_tograph %>%
 
 
 ```
-
-
-
-
-
 # ddd per month for each state and drug_type
 state mean from lga level standardisation
 
