@@ -1,0 +1,460 @@
+
+---
+title: "Benzo-opioid v2 analysis"
+author:  "Mofi Islam and Dennis Wollersheim "
+date: "2018-04-30"
+output:
+workflowr::wflow_html:
+toc: false
+---
+
+```{r pre_initial, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+rm(list=ls())
+options(width = 200)
+show_code = FALSE
+source("lib/functions.R")
+source("lib/mapping_functions.R")
+source("lib/mapping_paper.R")
+source("lib/standardisation.R")
+source("lib/get_data.R")
+source("lib/generate_data_frames.R")
+library('tidyverse')
+opts_chunk$set(echo = FALSE)
+
+
+```
+
+
+```{r initial, results='hide', message=FALSE, warning=FALSE}
+
+dataset="_rr"
+dataset=""
+
+
+get_data_from_cache(dataset = dataset)
+
+df  %>%
+  inner_join( df_patient, by='pin' ) %>%
+  filter( lga != '.' & !endsWith( lga, '99') ) %>%
+  group_by(  pin, sex, age, drug_type, lga, state   ) %>%
+  summarise(n_dose = sum( n_dose ) )%>%
+  spread( drug_type, n_dose ) %>%
+  rename( n_dose_opioid = opioid, 
+         n_dose_benzo = benzodiazepine ) %>%
+  mutate_if( is_numeric, function(x) { ifelse( is.na( x ), 0, x ) } ) %>%
+  inner_join( 
+             df_population %>% 
+               filter( supply_year==2013)  %>%
+               filter( lga != '.' & !endsWith( lga, '99') ) %>%
+               mutate( urbanization7 = str_replace( class_name,'([^ ]* [^ ]*).*',"\\1"  ), 
+                      ifelse( urbanization7=='Rural Agriculture', 'Rural Agricultural', urbanization7)) %>%
+               rename( urbanization22 = class_name ) %>%
+               rename( urbanization2 = urbanization ) %>%
+               group_by( lga, lga_name, seifa, urbanization2, urbanization7, urbanization22  ) %>%
+               summarise( population_2013 = sum( population )), 
+             by=c('lga') ) %>% 
+  inner_join( df_patient_usage, ) %>%
+  ungroup() %>%
+  { . } -> df_mlm
+
+```
+# Methods
+
+The data is from the PBS prescribing data.  In this dataset, we have every opioid and benzodiazepine prescription for a 10% sample of the population, made in the period 2013-2016.  In a single prescription, we have a date of supply, a drug type and strength, and the number of pills.  Using the WHO DDD drug classification, we determine the total DDD for each prescription, and then we estimate the end day of the prescription to be the start day + totalDDD, rounded to the nearest day.  This start and end data comprise the prescription period. 
+
+## Variables
+
+### Independent
+* LGA level variables
+  * SEIFA
+  * urbanisation
+  * census data - english language, 2 person household
+* Person level variables
+  * gender
+  * age groups
+  * drug of choice
+  * user type
+  * lga
+* Script level variables
+  * month of supply
+  * drug type - drug name
+  * benzo type
+  * opioid type
+
+
+### dependent variables
+* benzo and opioid usage (scripts / ddd / number of users / ddd per user / scripts per user  )
+* lga level ddd
+
+
+
+
+```{r nquarter }
+
+df_mlm %>%
+  gather(type, nquarter, opioid_n_quarter, benzo_n_quarter) %>%
+  filter( nquarter != 0 ) %>%
+  count( type, nquarter ) %>%
+  spread( type, n) %>% 
+  mutate_at( vars( ends_with( 'n_quarter' )), funs(  pct=round( ./sum(.)*100,2))) %>%
+  { . } -> df_nquarter
+
+df_nquarter %>% kable()
+
+
+df_nquarter %>%
+  select( -ends_with('n_quarter')) %>%
+  gather( type, pct, -nquarter )  %>%
+  ggplot( aes( pct,nquarter, color=type )) + geom_point() + geom_path()
+
+
+```
+
+
+
+Overall combined, percentages of each category
+```{r quarters_by_age}
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( opioid_usage_category, age ) %>%
+  filter( !is.na( opioid_usage_category )) %>%
+  group_by(opioid_usage_category ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( color=opioid_usage_category, pct, x=age, group=opioid_usage_category )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'overall combined opioid pct by age group and usage category ')
+
+
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( benzo_usage_category, age ) %>%
+  filter( !is.na( benzo_usage_category )) %>%
+  group_by(benzo_usage_category ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( color=benzo_usage_category, pct, x=age, group=benzo_usage_category )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'overall combined benzo pct by age group and usage category ')
+
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( both_category, age ) %>%
+  filter( !is.na( both_category )) %>%
+  group_by(both_category ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( color=both_category, pct, x=age, group=both_category )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'overall combined both pct by age group and usage category ')
+
+
+```
+
+
+Overall combined, percentages of each age group
+```{r quarters_by_age_v1}
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( opioid_usage_category, age ) %>%
+  filter( !is.na( opioid_usage_category )) %>%
+  group_by(age ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( opioid_usage_category, pct, color=age, group=age )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'overall combined opioid pct by age group and usage category ')
+
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( benzo_usage_category, age ) %>%
+  filter( !is.na( benzo_usage_category )) %>%
+  group_by(age ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( benzo_usage_category, pct, color=age, group=age )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'overall combined benzo pct by age group and usage category ')
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( both_category, age ) %>%
+  filter( !is.na( both_category )) %>%
+  group_by(age ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( both_category, pct, color=age, group=age )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'overall combined both (double dipper benzo and opioid in same quarter) pct by age group and usage category ')
+
+```
+
+
+
+Overall combined, percentages of each category by state 
+
+** this should be standardized because population distribution varies so much between states
+
+```{r category_by_state}
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( opioid_usage_category, age, state ) %>%
+  filter( !is.na( opioid_usage_category )) %>%
+  group_by(opioid_usage_category, state ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  arrange(opioid_usage_category, state ) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( opioid_usage_category, pct, color=age, group=age )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'opioid usate category vs % of this category made up by this age group by age group and state') +
+  facet_wrap( ~state )
+
+
+df_mlm %>%
+  select( age, state, ends_with('category')) %>%
+  count( benzo_usage_category, age, state ) %>%
+  filter( !is.na( benzo_usage_category )) %>%
+  group_by(benzo_usage_category, state ) %>%
+  mutate( pct = round( n / sum( n ) * 100, 2 )) %>%
+  arrange(benzo_usage_category, state ) %>%
+  select(-n ) %>%
+  ungroup() %>%
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( age, pct ) %>% 
+  kable( )
+
+df_tograph %>%
+  ggplot(  aes( benzo_usage_category, pct, color=age, group=age )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( ' usate category vs % of this category made up by this age group by age group and state') +
+  facet_wrap( ~state )
+
+```
+
+ddd of each drug type by state  and usage category
+
+```{r ddd_and_type_by_state_usage}
+
+df %>%
+  filter( drug_type=='opioid' & type_name != 'Other'  ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_patient_usage, by='pin'  ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, opioid_usage_category, state, type_name, supply_year )) %>% 
+  group_by( opioid_usage_category, state, type_name ) %>% 
+  summarise( ddd = mean( ddd ) ) %>% 
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread( type_name, ddd ) %>% 
+  kable( )
+
+df_tograph %>%
+  ungroup() %>%
+  ggplot(  aes( opioid_usage_category, ddd, color=type_name, group=type_name )) + 
+  geom_point() + 
+  geom_path() +
+  ggtitle( 'ddd for each usage category by drug_type and state') +
+  facet_wrap( ~state )
+
+
+
+```
+
+
+
+
+# ddd per month for each state and age group
+state mean from lga level standardisation
+
+```{r ddd_and_category_by_state}
+
+df %>%
+  filter( drug_type=='opioid' & type_name != 'Other'  ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_patient_usage, by='pin'  ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, opioid_usage_category, state, supply_month )) %>% 
+  group_by( opioid_usage_category, state, supply_month ) %>% 
+  summarise( ddd = mean( ddd ) ) %>% 
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread(opioid_usage_category, ddd ) %>% 
+  kable( )
+
+df_tograph %>%
+  ungroup() %>%
+  mutate( dom = as.Date( paste0(supply_month, '-01'), format='%Y-%m-%d')) %>%
+  ggplot(  aes( dom , ddd, color=state, group=state)) + 
+  geom_path() +
+  ggtitle( 'ddd for each opioid usage category by drug_type and state') +
+  scale_x_date(date_breaks = "6 months" , date_labels = "%Y-%m") +
+  facet_wrap( ~opioid_usage_category )
+
+
+
+df %>%
+  filter( drug_type=='benzodiazepine' ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_patient_usage, by='pin'  ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, benzo_usage_category, state, supply_month )) %>% 
+  group_by( benzo_usage_category, state, supply_month ) %>% 
+  summarise( ddd = mean( ddd ) ) %>% 
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread(benzo_usage_category, ddd ) %>% 
+  kable( )
+
+df_tograph %>%
+  ungroup() %>%
+  mutate( dom = as.Date( paste0(supply_month, '-01'), format='%Y-%m-%d')) %>%
+  ggplot(  aes( dom , ddd, color=state, group=state)) + 
+  geom_path() +
+  ggtitle( 'ddd for each benzo usage category by drug_type and state') +
+  scale_x_date(date_breaks = "6 months" , date_labels = "%Y-%m") +
+  facet_wrap( ~benzo_usage_category )
+
+
+
+```
+
+
+
+
+
+# ddd per month for each state and drug_type
+state mean from lga level standardisation
+
+```{r ddd_and_type_by_state}
+
+df %>%
+  filter( drug_type=='opioid' & type_name != 'Other'  ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_patient_usage, by='pin'  ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, type_name, state, supply_month )) %>% 
+  group_by( type_name, state, supply_month ) %>% 
+  summarise( ddd = mean( ddd ) ) %>% 
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread(type_name, ddd ) %>% 
+  kable( )
+
+df_tograph %>%
+  ungroup() %>%
+  mutate( dom = as.Date( paste0(supply_month, '-01'), format='%Y-%m-%d')) %>%
+  ggplot(  aes( dom , ddd, color=state, group=state)) + 
+  geom_path() +
+  ggtitle( 'ddd for each usage category by drug_type and state') +
+  scale_x_date(date_breaks = "6 months" , date_labels = "%Y-%m") +
+  facet_wrap( ~type_name, scales = 'free'  )
+
+
+df %>%
+  filter( drug_type=='benzodiazepine' & type_name != 'Other'  ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_patient_usage, by='pin'  ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, type_name, state, supply_month )) %>% 
+  group_by( type_name, state, supply_month ) %>% 
+  summarise( ddd = mean( ddd ) ) %>% 
+  { . } -> df_tograph
+
+df_tograph %>%
+  spread(type_name, ddd ) %>% 
+  kable( )
+
+df_tograph %>%
+  ungroup() %>%
+  mutate( dom = as.Date( paste0(supply_month, '-01'), format='%Y-%m-%d')) %>%
+  ggplot(  aes( dom , ddd, color=state, group=state)) + 
+  geom_path() +
+  ggtitle( 'ddd for each usage category by drug_type and state') +
+  scale_x_date(date_breaks = "6 months" , date_labels = "%Y-%m") +
+  facet_wrap( ~type_name, scales = 'free'  )
+
+
+```
+
+
+
+
+
+
