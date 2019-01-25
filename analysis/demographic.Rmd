@@ -266,7 +266,7 @@ df %>%
   dplyr::summarise( 
                    ddd = sum((n_dose * 1000 * 10)) / sum(population * my_year_length( supply_year ) ),
                    dddu = sum((n_dose * 1000 * 10)) / sum( n_user * my_year_length( supply_year ) ),
-                   proportion = sum( n_user ) * 1000 / sum( population ) 
+                   proportion = sum( n_user ) * 1000 * 10 / sum( population ) 
                    ) %>%  
   { . } -> df_stats
 
