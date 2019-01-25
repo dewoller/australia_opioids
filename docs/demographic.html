@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Mofi Islam and Dennis Wollersheim" />
+
+<meta name="date" content="2018-04-30" />
+
+<title>All Australia Benzo and Opioid Basic Stats</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.0.13/css/fa-svg-with-js.css" rel="stylesheet" />
+<script src="site_libs/font-awesome-5.0.13/js/fontawesome-all.min.js"></script>
+<script src="site_libs/font-awesome-5.0.13/js/fa-v4-shims.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">all_oz</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jdblischak/workflowr">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">All Australia Benzo and Opioid Basic Stats</h1>
+<h4 class="author"><em>Mofi Islam and Dennis Wollersheim</em></h4>
+<h4 class="date"><em>2018-04-30</em></h4>
+
+</div>
+
+
+<p><strong>Last updated:</strong> 2019-01-25</p>
+<strong>workflowr checks:</strong> <small>(Click a bullet for more information)</small>
+<ul>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>R Markdown file:</strong> up-to-date </summary></p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Environment:</strong> empty </summary></p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Seed:</strong> <code>set.seed(20190107)</code> </summary></p>
+<p>The command <code>set.seed(20190107)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Session information:</strong> recorded </summary></p>
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</details>
+</li>
+<li>
+<p><details> <summary> <strong style="color:blue;">✔</strong> <strong>Repository version:</strong> <a href="https://github.com/dewoller/australia_opioids/tree/8962093c61f21e74e73c0549391ee3e88c911980" target="_blank">8962093</a> </summary></p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+<pre><code>
+Ignored files:
+    Ignored:    data/cache/
+    Ignored:    graphics/
+
+Unstaged changes:
+    Modified:   analysis/basicStats.Rmd
+    Deleted:    analysis/demograhic.Rmd
+    Modified:   lib/multiPlots.R
+    Modified:   lib/standardisation.R
+
+</code></pre>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes. </details>
+</li>
+</ul>
+<details> <summary> <small><strong>Expand here to see past versions:</strong></small> </summary>
+<ul>
+<table style="border-collapse:separate; border-spacing:5px;">
+<thead>
+<tr>
+<th style="text-align:left;">
+File
+</th>
+<th style="text-align:left;">
+Version
+</th>
+<th style="text-align:left;">
+Author
+</th>
+<th style="text-align:left;">
+Date
+</th>
+<th style="text-align:left;">
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Rmd
+</td>
+<td style="text-align:left;">
+<a href="https://github.com/dewoller/australia_opioids/blob/8962093c61f21e74e73c0549391ee3e88c911980/analysis/demographic.Rmd" target="_blank">8962093</a>
+</td>
+<td style="text-align:left;">
+Dennis Wollersheim
+</td>
+<td style="text-align:left;">
+2019-01-25
+</td>
+<td style="text-align:left;">
+wflow_publish(“analysis/demographic.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</ul>
+<p></details></p>
+<hr />
+<div id="state-level-stats-for-each-opioid-usage-category-and-type-name" class="section level1">
+<h1>state level stats for each opioid usage category and type name</h1>
+<ul>
+<li>number of users, ddd, dddU</li>
+</ul>
+<pre><code>Warning: Column `age` has different attributes on LHS and RHS of join</code></pre>
+<pre><code>Warning: Column `age` joining factor and character vector, coercing into character vector</code></pre>
+<pre><code>Warning: Column `age` joining character vector and factor, coercing into character vector</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">opioid_usage_category</th>
+<th align="left">state</th>
+<th align="right">Bupre</th>
+<th align="right">Fentanyl</th>
+<th align="right">Hydromorphone</th>
+<th align="right">Methadone</th>
+<th align="right">Morphine</th>
+<th align="right">Oxycodone and Oxy+Nalox</th>
+<th align="right">Para_Codeine</th>
+<th align="right">Tapentadol</th>
+<th align="right">Tramadol</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">NSW</td>
+<td align="right">77.53852</td>
+<td align="right">428.36798</td>
+<td align="right">346.85886</td>
+<td align="right">161.0702</td>
+<td align="right">242.68712</td>
+<td align="right">68.14324</td>
+<td align="right">185.8101</td>
+<td align="right">139.22838</td>
+<td align="right">151.7590</td>
+</tr>
+<tr class="even">
+<td align="left">one-off</td>
+<td align="left">NT</td>
+<td align="right">42.31255</td>
+<td align="right">303.76718</td>
+<td align="right">227.66495</td>
+<td align="right">NA</td>
+<td align="right">28.14698</td>
+<td align="right">52.71966</td>
+<td align="right">184.6462</td>
+<td align="right">12.81548</td>
+<td align="right">130.8048</td>
+</tr>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">QLD</td>
+<td align="right">76.14916</td>
+<td align="right">379.99455</td>
+<td align="right">1142.44392</td>
+<td align="right">326.5056</td>
+<td align="right">332.83565</td>
+<td align="right">65.54120</td>
+<td align="right">186.9344</td>
+<td align="right">151.44500</td>
+<td align="right">143.4604</td>
+</tr>
+<tr class="even">
+<td align="left">one-off</td>
+<td align="left">SA</td>
+<td align="right">63.93574</td>
+<td align="right">228.17250</td>
+<td align="right">115.12967</td>
+<td align="right">333.3856</td>
+<td align="right">149.39646</td>
+<td align="right">55.95071</td>
+<td align="right">192.4138</td>
+<td align="right">107.01851</td>
+<td align="right">140.0844</td>
+</tr>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">TAS</td>
+<td align="right">57.98715</td>
+<td align="right">73.07767</td>
+<td align="right">72.70677</td>
+<td align="right">105.9414</td>
+<td align="right">130.80669</td>
+<td align="right">59.27877</td>
+<td align="right">195.4085</td>
+<td align="right">124.12338</td>
+<td align="right">146.2784</td>
+</tr>
+<tr class="even">
+<td align="left">one-off</td>
+<td align="left">VIC</td>
+<td align="right">57.03850</td>
+<td align="right">375.45084</td>
+<td align="right">301.47238</td>
+<td align="right">212.7762</td>
+<td align="right">208.01795</td>
+<td align="right">57.27917</td>
+<td align="right">182.8221</td>
+<td align="right">131.96967</td>
+<td align="right">133.2908</td>
+</tr>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">WA</td>
+<td align="right">89.70234</td>
+<td align="right">216.25040</td>
+<td align="right">214.69727</td>
+<td align="right">220.4622</td>
+<td align="right">253.34811</td>
+<td align="right">67.84057</td>
+<td align="right">187.7844</td>
+<td align="right">138.61312</td>
+<td align="right">127.5705</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">NSW</td>
+<td align="right">242.64608</td>
+<td align="right">1766.13753</td>
+<td align="right">4134.26777</td>
+<td align="right">1620.4759</td>
+<td align="right">1402.71453</td>
+<td align="right">223.32875</td>
+<td align="right">324.8776</td>
+<td align="right">482.10784</td>
+<td align="right">362.7214</td>
+</tr>
+<tr class="odd">
+<td align="left">short-term</td>
+<td align="left">NT</td>
+<td align="right">108.24668</td>
+<td align="right">471.03158</td>
+<td align="right">73.06102</td>
+<td align="right">102.7942</td>
+<td align="right">715.03019</td>
+<td align="right">166.88039</td>
+<td align="right">289.8463</td>
+<td align="right">338.90482</td>
+<td align="right">281.7248</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">QLD</td>
+<td align="right">321.67396</td>
+<td align="right">1429.12941</td>
+<td align="right">5231.28781</td>
+<td align="right">1614.9869</td>
+<td align="right">930.33594</td>
+<td align="right">197.80594</td>
+<td align="right">327.5373</td>
+<td align="right">395.28630</td>
+<td align="right">347.4770</td>
+</tr>
+<tr class="odd">
+<td align="left">short-term</td>
+<td align="left">SA</td>
+<td align="right">273.48654</td>
+<td align="right">1063.43711</td>
+<td align="right">2242.52696</td>
+<td align="right">1479.8445</td>
+<td align="right">1148.16311</td>
+<td align="right">169.64721</td>
+<td align="right">359.7293</td>
+<td align="right">411.58974</td>
+<td align="right">364.0222</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">TAS</td>
+<td align="right">291.69280</td>
+<td align="right">623.44398</td>
+<td align="right">2149.43613</td>
+<td align="right">749.9432</td>
+<td align="right">606.50331</td>
+<td align="right">165.51533</td>
+<td align="right">430.1069</td>
+<td align="right">278.43748</td>
+<td align="right">412.0892</td>
+</tr>
+<tr class="odd">
+<td align="left">short-term</td>
+<td align="left">VIC</td>
+<td align="right">256.05556</td>
+<td align="right">1197.22453</td>
+<td align="right">2658.49413</td>
+<td align="right">2464.3206</td>
+<td align="right">1076.91282</td>
+<td align="right">155.88374</td>
+<td align="right">303.8771</td>
+<td align="right">352.58069</td>
+<td align="right">307.0089</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">WA</td>
+<td align="right">228.06062</td>
+<td align="right">1103.96808</td>
+<td align="right">2010.92593</td>
+<td align="right">1723.2137</td>
+<td align="right">905.81934</td>
+<td align="right">168.17982</td>
+<td align="right">348.4241</td>
+<td align="right">308.08596</td>
+<td align="right">309.6628</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">NSW</td>
+<td align="right">738.21161</td>
+<td align="right">3903.05125</td>
+<td align="right">3949.53304</td>
+<td align="right">6130.7378</td>
+<td align="right">2296.68474</td>
+<td align="right">1043.02574</td>
+<td align="right">1578.5245</td>
+<td align="right">1008.62246</td>
+<td align="right">1295.3217</td>
+</tr>
+<tr class="even">
+<td align="left">long-term</td>
+<td align="left">NT</td>
+<td align="right">956.84273</td>
+<td align="right">393.35924</td>
+<td align="right">228.34098</td>
+<td align="right">4441.1645</td>
+<td align="right">2031.75170</td>
+<td align="right">534.57362</td>
+<td align="right">1250.3116</td>
+<td align="right">499.45532</td>
+<td align="right">1451.4038</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">QLD</td>
+<td align="right">669.52636</td>
+<td align="right">4706.75655</td>
+<td align="right">3108.42896</td>
+<td align="right">5988.1678</td>
+<td align="right">5075.77923</td>
+<td align="right">980.89597</td>
+<td align="right">1471.6480</td>
+<td align="right">1047.24328</td>
+<td align="right">1397.2187</td>
+</tr>
+<tr class="even">
+<td align="left">long-term</td>
+<td align="left">SA</td>
+<td align="right">571.91397</td>
+<td align="right">2021.75275</td>
+<td align="right">4400.00796</td>
+<td align="right">3740.8080</td>
+<td align="right">1846.30295</td>
+<td align="right">640.00893</td>
+<td align="right">1816.9354</td>
+<td align="right">813.97263</td>
+<td align="right">1737.5617</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">TAS</td>
+<td align="right">638.75406</td>
+<td align="right">1261.53400</td>
+<td align="right">717.68228</td>
+<td align="right">2092.6002</td>
+<td align="right">1343.48506</td>
+<td align="right">608.48454</td>
+<td align="right">2150.8605</td>
+<td align="right">776.92841</td>
+<td align="right">1622.5410</td>
+</tr>
+<tr class="even">
+<td align="left">long-term</td>
+<td align="left">VIC</td>
+<td align="right">656.32182</td>
+<td align="right">2232.82792</td>
+<td align="right">7151.30412</td>
+<td align="right">4554.5270</td>
+<td align="right">2313.85194</td>
+<td align="right">1030.84258</td>
+<td align="right">1343.9271</td>
+<td align="right">973.80273</td>
+<td align="right">1329.3263</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">WA</td>
+<td align="right">513.20974</td>
+<td align="right">3315.83729</td>
+<td align="right">1979.02621</td>
+<td align="right">3890.7394</td>
+<td align="right">3077.67365</td>
+<td align="right">764.80102</td>
+<td align="right">1717.4960</td>
+<td align="right">816.84398</td>
+<td align="right">1685.5156</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">NSW</td>
+<td align="right">1260.66234</td>
+<td align="right">7271.78203</td>
+<td align="right">6688.10866</td>
+<td align="right">9139.1804</td>
+<td align="right">6003.12894</td>
+<td align="right">4062.09021</td>
+<td align="right">5154.7687</td>
+<td align="right">1549.34431</td>
+<td align="right">4464.2014</td>
+</tr>
+<tr class="odd">
+<td align="left">regular</td>
+<td align="left">NT</td>
+<td align="right">1299.21756</td>
+<td align="right">1014.51617</td>
+<td align="right">87.82341</td>
+<td align="right">7139.5674</td>
+<td align="right">11273.15080</td>
+<td align="right">5127.97567</td>
+<td align="right">3966.1669</td>
+<td align="right">653.36388</td>
+<td align="right">3286.3380</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">QLD</td>
+<td align="right">1282.26820</td>
+<td align="right">6853.16991</td>
+<td align="right">6914.85639</td>
+<td align="right">10289.0363</td>
+<td align="right">7578.43338</td>
+<td align="right">3459.38473</td>
+<td align="right">4942.7595</td>
+<td align="right">1418.75040</td>
+<td align="right">4316.3736</td>
+</tr>
+<tr class="odd">
+<td align="left">regular</td>
+<td align="left">SA</td>
+<td align="right">1524.68555</td>
+<td align="right">4239.09541</td>
+<td align="right">3523.58313</td>
+<td align="right">8451.6872</td>
+<td align="right">6001.16788</td>
+<td align="right">1997.99856</td>
+<td align="right">5742.4461</td>
+<td align="right">1717.74951</td>
+<td align="right">4602.2897</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">TAS</td>
+<td align="right">1607.18018</td>
+<td align="right">3114.45647</td>
+<td align="right">2239.70555</td>
+<td align="right">5463.9699</td>
+<td align="right">2469.43300</td>
+<td align="right">2011.44826</td>
+<td align="right">6809.4300</td>
+<td align="right">1294.52011</td>
+<td align="right">4323.6162</td>
+</tr>
+<tr class="odd">
+<td align="left">regular</td>
+<td align="left">VIC</td>
+<td align="right">1278.49450</td>
+<td align="right">4928.46781</td>
+<td align="right">10231.75793</td>
+<td align="right">10065.2513</td>
+<td align="right">6593.20451</td>
+<td align="right">3033.18294</td>
+<td align="right">5666.1338</td>
+<td align="right">1811.14996</td>
+<td align="right">3871.0257</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">WA</td>
+<td align="right">1281.92233</td>
+<td align="right">4758.41845</td>
+<td align="right">5152.29634</td>
+<td align="right">8546.3419</td>
+<td align="right">7611.32301</td>
+<td align="right">2756.45371</td>
+<td align="right">6194.5069</td>
+<td align="right">1822.08903</td>
+<td align="right">4939.9820</td>
+</tr>
+</tbody>
+</table>
+<p><img src="figure/demographic.Rmd/opioid_type_name_usage_cateogry-1.png" width="1152" style="display: block; margin: auto;" /><img src="figure/demographic.Rmd/opioid_type_name_usage_cateogry-2.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre><code>## comparision with regular ddd</code></pre>
+<p><img src="figure/demographic.Rmd/opioid_type_name_usage_cateogry-3.png" width="1152" style="display: block; margin: auto;" /><img src="figure/demographic.Rmd/opioid_type_name_usage_cateogry-4.png" width="1152" style="display: block; margin: auto;" /></p>
+<div id="who-is-responsible-for-the-hydromorphone-in-qld" class="section level2">
+<h2>who is responsible for the hydromorphone in QLD?</h2>
+<p>summary stats for qld hydromorphone; number of doses, number of pp</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">sum(n_dose)</th>
+<th align="right">n_distinct(pin)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">310913.5</td>
+<td align="right">885</td>
+</tr>
+</tbody>
+</table>
+<p>top 10 users</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">pin</th>
+<th align="right">n_dose</th>
+<th align="right">n()</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">9301.30</td>
+<td align="right">36</td>
+</tr>
+<tr class="even">
+<td align="right">6159885508</td>
+<td align="right">8725.30</td>
+<td align="right">135</td>
+</tr>
+<tr class="odd">
+<td align="right">854077197</td>
+<td align="right">4886.95</td>
+<td align="right">63</td>
+</tr>
+<tr class="even">
+<td align="right">7957057388</td>
+<td align="right">4726.40</td>
+<td align="right">106</td>
+</tr>
+<tr class="odd">
+<td align="right">6628623100</td>
+<td align="right">4678.30</td>
+<td align="right">45</td>
+</tr>
+<tr class="even">
+<td align="right">3021543511</td>
+<td align="right">4203.10</td>
+<td align="right">56</td>
+</tr>
+<tr class="odd">
+<td align="right">3794178361</td>
+<td align="right">4096.40</td>
+<td align="right">97</td>
+</tr>
+<tr class="even">
+<td align="right">1952659299</td>
+<td align="right">4074.00</td>
+<td align="right">93</td>
+</tr>
+<tr class="odd">
+<td align="right">564670658</td>
+<td align="right">3774.30</td>
+<td align="right">240</td>
+</tr>
+<tr class="even">
+<td align="right">8103444208</td>
+<td align="right">3595.20</td>
+<td align="right">110</td>
+</tr>
+</tbody>
+</table>
+<p>top user</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">pin</th>
+<th align="right">type_code</th>
+<th align="left">generic_name</th>
+<th align="left">type_name</th>
+<th align="left">supply_date</th>
+<th align="right">n_dose</th>
+<th align="left">drug_type</th>
+<th align="right">quarter</th>
+<th align="left">supply_month</th>
+<th align="left">supply_year</th>
+<th align="right">row</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-01-18</td>
+<td align="right">84.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.1</td>
+<td align="left">2013-01</td>
+<td align="left">2013</td>
+<td align="right">6083036</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-01-21</td>
+<td align="right">96.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.1</td>
+<td align="left">2013-01</td>
+<td align="left">2013</td>
+<td align="right">6083085</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-02-15</td>
+<td align="right">84.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.1</td>
+<td align="left">2013-02</td>
+<td align="left">2013</td>
+<td align="right">6083037</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-02-15</td>
+<td align="right">96.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.1</td>
+<td align="left">2013-02</td>
+<td align="left">2013</td>
+<td align="right">6083086</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-03-22</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.1</td>
+<td align="left">2013-03</td>
+<td align="left">2013</td>
+<td align="right">6083038</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-03-22</td>
+<td align="right">96.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.1</td>
+<td align="left">2013-03</td>
+<td align="left">2013</td>
+<td align="right">6083087</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-04-18</td>
+<td align="right">120.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-04</td>
+<td align="left">2013</td>
+<td align="right">6083039</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-04-18</td>
+<td align="right">120.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-04</td>
+<td align="left">2013</td>
+<td align="right">6083088</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-05-17</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-05</td>
+<td align="left">2013</td>
+<td align="right">6083040</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-05-17</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-05</td>
+<td align="left">2013</td>
+<td align="right">6083089</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-05-29</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-05</td>
+<td align="left">2013</td>
+<td align="right">6083041</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-05-29</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-05</td>
+<td align="left">2013</td>
+<td align="right">6083090</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-06-12</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-06</td>
+<td align="left">2013</td>
+<td align="right">6083042</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-06-12</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-06</td>
+<td align="left">2013</td>
+<td align="right">6083091</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-06-21</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-06</td>
+<td align="left">2013</td>
+<td align="right">6083043</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-06-21</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.2</td>
+<td align="left">2013-06</td>
+<td align="left">2013</td>
+<td align="right">6083092</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-07-10</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-07</td>
+<td align="left">2013</td>
+<td align="right">6083044</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-07-10</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-07</td>
+<td align="left">2013</td>
+<td align="right">6083093</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-07-24</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-07</td>
+<td align="left">2013</td>
+<td align="right">6083045</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-07-24</td>
+<td align="right">60.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-07</td>
+<td align="left">2013</td>
+<td align="right">6083094</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-08-13</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">6083046</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-08-13</td>
+<td align="right">150.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">6083072</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-08-13</td>
+<td align="right">1125.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">6083078</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-08-20</td>
+<td align="right">375.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">6083073</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-08-29</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">28446</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-08-29</td>
+<td align="right">225.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">6083074</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-08-29</td>
+<td align="right">1125.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-08</td>
+<td align="left">2013</td>
+<td align="right">6083079</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-09-02</td>
+<td align="right">12.5</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-09</td>
+<td align="left">2013</td>
+<td align="right">6083075</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-09-19</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-09</td>
+<td align="left">2013</td>
+<td align="right">6083047</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-09-19</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-09</td>
+<td align="left">2013</td>
+<td align="right">6083095</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-09-20</td>
+<td align="right">480.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.3</td>
+<td align="left">2013-09</td>
+<td align="left">2013</td>
+<td align="right">6083105</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-10-03</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-10</td>
+<td align="left">2013</td>
+<td align="right">6083048</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-10-11</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-10</td>
+<td align="left">2013</td>
+<td align="right">6083049</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-10-11</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-10</td>
+<td align="left">2013</td>
+<td align="right">6083096</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-10-11</td>
+<td align="right">44.8</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-10</td>
+<td align="left">2013</td>
+<td align="right">6083101</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-10-11</td>
+<td align="right">179.2</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-10</td>
+<td align="left">2013</td>
+<td align="right">6083106</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-11-04</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-11</td>
+<td align="left">2013</td>
+<td align="right">6083050</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-11-11</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-11</td>
+<td align="left">2013</td>
+<td align="right">6083051</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-11-19</td>
+<td align="right">625.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-11</td>
+<td align="left">2013</td>
+<td align="right">6083080</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-11-29</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-11</td>
+<td align="left">2013</td>
+<td align="right">6083052</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2013-12-06</td>
+<td align="right">625.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-12</td>
+<td align="left">2013</td>
+<td align="right">6083081</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-12-18</td>
+<td align="right">56.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-12</td>
+<td align="left">2013</td>
+<td align="right">6083053</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2013-12-31</td>
+<td align="right">56.0</td>
+<td align="left">opioid</td>
+<td align="right">2013.4</td>
+<td align="left">2013-12</td>
+<td align="left">2013</td>
+<td align="right">6083054</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-01-02</td>
+<td align="right">54.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-01</td>
+<td align="left">2014</td>
+<td align="right">6083097</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-01-06</td>
+<td align="right">44.8</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-01</td>
+<td align="left">2014</td>
+<td align="right">6083102</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-01-06</td>
+<td align="right">89.6</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-01</td>
+<td align="left">2014</td>
+<td align="right">6083107</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2014-01-20</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-01</td>
+<td align="left">2014</td>
+<td align="right">6083055</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2014-02-12</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-02</td>
+<td align="left">2014</td>
+<td align="right">6083056</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-02-21</td>
+<td align="right">44.8</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-02</td>
+<td align="left">2014</td>
+<td align="right">6083103</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2014-03-19</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-03</td>
+<td align="left">2014</td>
+<td align="right">6083057</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-03-24</td>
+<td align="right">22.4</td>
+<td align="left">opioid</td>
+<td align="right">2014.1</td>
+<td align="left">2014-03</td>
+<td align="left">2014</td>
+<td align="right">6083098</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-04-03</td>
+<td align="right">44.8</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-04</td>
+<td align="left">2014</td>
+<td align="right">6083104</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2014-04-16</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-04</td>
+<td align="left">2014</td>
+<td align="right">6083058</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2014-05-08</td>
+<td align="right">72.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-05</td>
+<td align="left">2014</td>
+<td align="right">6083059</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-05-08</td>
+<td align="right">100.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-05</td>
+<td align="left">2014</td>
+<td align="right">6083076</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-05-08</td>
+<td align="right">375.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-05</td>
+<td align="left">2014</td>
+<td align="right">6083082</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-05-08</td>
+<td align="right">11.2</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-05</td>
+<td align="left">2014</td>
+<td align="right">6083099</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-05-12</td>
+<td align="right">11.2</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-05</td>
+<td align="left">2014</td>
+<td align="right">6083100</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-05-28</td>
+<td align="right">375.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-05</td>
+<td align="left">2014</td>
+<td align="right">6083077</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-06-05</td>
+<td align="right">750.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-06</td>
+<td align="left">2014</td>
+<td align="right">6083083</td>
+</tr>
+<tr class="odd">
+<td align="right">7538740161</td>
+<td align="right">6</td>
+<td align="left">Methadone</td>
+<td align="left">Methadone</td>
+<td align="left">2014-06-16</td>
+<td align="right">48.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-06</td>
+<td align="left">2014</td>
+<td align="right">6083060</td>
+</tr>
+<tr class="even">
+<td align="right">7538740161</td>
+<td align="right">8</td>
+<td align="left">Hydromorphone</td>
+<td align="left">Hydromorphone</td>
+<td align="left">2014-06-25</td>
+<td align="right">1500.0</td>
+<td align="left">opioid</td>
+<td align="right">2014.2</td>
+<td align="left">2014-06</td>
+<td align="left">2014</td>
+<td align="right">6083084</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="state-level-stats-for-each-benzo-usage-category-and-type-name" class="section level1">
+<h1>state level stats for each benzo usage category and type name</h1>
+<ul>
+<li>number of users, ddd, dddU</li>
+</ul>
+<pre><code>Warning: Column `age` has different attributes on LHS and RHS of join</code></pre>
+<pre><code>Warning: Column `age` joining factor and character vector, coercing into character vector</code></pre>
+<pre><code>Warning: Column `age` joining character vector and factor, coercing into character vector</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">benzo_usage_category</th>
+<th align="left">state</th>
+<th align="right">Alprazolam</th>
+<th align="right">Bromazepam</th>
+<th align="right">Clonazepam</th>
+<th align="right">Diazepam</th>
+<th align="right">Flunitrazepam</th>
+<th align="right">Nitrazepam</th>
+<th align="right">Oxazepam</th>
+<th align="right">Stilnox</th>
+<th align="right">Temazepam</th>
+<th align="right">Zopiclone</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">NSW</td>
+<td align="right">854.8341</td>
+<td align="right">81.56097</td>
+<td align="right">268.21233</td>
+<td align="right">432.2277</td>
+<td align="right">132.85835</td>
+<td align="right">749.4478</td>
+<td align="right">312.8406</td>
+<td align="right">NA</td>
+<td align="right">339.0371</td>
+<td align="right">178.3173</td>
+</tr>
+<tr class="even">
+<td align="left">one-off</td>
+<td align="left">NT</td>
+<td align="right">622.1340</td>
+<td align="right">NA</td>
+<td align="right">13.42947</td>
+<td align="right">269.6616</td>
+<td align="right">NA</td>
+<td align="right">215.2673</td>
+<td align="right">161.1552</td>
+<td align="right">NA</td>
+<td align="right">267.2391</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">QLD</td>
+<td align="right">929.1496</td>
+<td align="right">26.20238</td>
+<td align="right">247.29082</td>
+<td align="right">438.7079</td>
+<td align="right">77.65436</td>
+<td align="right">686.1093</td>
+<td align="right">310.8512</td>
+<td align="right">NA</td>
+<td align="right">343.3794</td>
+<td align="right">419.9647</td>
+</tr>
+<tr class="even">
+<td align="left">one-off</td>
+<td align="left">SA</td>
+<td align="right">572.9040</td>
+<td align="right">NA</td>
+<td align="right">121.50279</td>
+<td align="right">467.3692</td>
+<td align="right">NA</td>
+<td align="right">562.9062</td>
+<td align="right">294.8577</td>
+<td align="right">NA</td>
+<td align="right">342.9748</td>
+<td align="right">101.6930</td>
+</tr>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">TAS</td>
+<td align="right">385.3079</td>
+<td align="right">NA</td>
+<td align="right">110.55609</td>
+<td align="right">440.3576</td>
+<td align="right">NA</td>
+<td align="right">501.2510</td>
+<td align="right">276.4158</td>
+<td align="right">NA</td>
+<td align="right">336.4767</td>
+<td align="right">446.4625</td>
+</tr>
+<tr class="even">
+<td align="left">one-off</td>
+<td align="left">VIC</td>
+<td align="right">744.0047</td>
+<td align="right">69.74561</td>
+<td align="right">248.40999</td>
+<td align="right">398.2372</td>
+<td align="right">NA</td>
+<td align="right">630.4745</td>
+<td align="right">293.4465</td>
+<td align="right">NA</td>
+<td align="right">327.8621</td>
+<td align="right">149.1029</td>
+</tr>
+<tr class="odd">
+<td align="left">one-off</td>
+<td align="left">WA</td>
+<td align="right">1196.8289</td>
+<td align="right">34.96835</td>
+<td align="right">146.45861</td>
+<td align="right">384.4392</td>
+<td align="right">NA</td>
+<td align="right">683.6237</td>
+<td align="right">281.2325</td>
+<td align="right">4.828925</td>
+<td align="right">334.6697</td>
+<td align="right">157.6145</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">NSW</td>
+<td align="right">3423.7533</td>
+<td align="right">209.39364</td>
+<td align="right">926.43104</td>
+<td align="right">942.4935</td>
+<td align="right">311.06287</td>
+<td align="right">1450.5128</td>
+<td align="right">609.4714</td>
+<td align="right">77.057631</td>
+<td align="right">572.4413</td>
+<td align="right">1214.5762</td>
+</tr>
+<tr class="odd">
+<td align="left">short-term</td>
+<td align="left">NT</td>
+<td align="right">1602.4251</td>
+<td align="right">NA</td>
+<td align="right">42.13303</td>
+<td align="right">601.9159</td>
+<td align="right">NA</td>
+<td align="right">589.1424</td>
+<td align="right">453.3967</td>
+<td align="right">NA</td>
+<td align="right">496.8993</td>
+<td align="right">131.6641</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">QLD</td>
+<td align="right">2728.3835</td>
+<td align="right">183.53695</td>
+<td align="right">855.53222</td>
+<td align="right">931.3630</td>
+<td align="right">198.41563</td>
+<td align="right">1192.4942</td>
+<td align="right">626.9029</td>
+<td align="right">183.551480</td>
+<td align="right">557.6744</td>
+<td align="right">1474.3622</td>
+</tr>
+<tr class="odd">
+<td align="left">short-term</td>
+<td align="left">SA</td>
+<td align="right">3641.8827</td>
+<td align="right">NA</td>
+<td align="right">731.01448</td>
+<td align="right">1005.8175</td>
+<td align="right">NA</td>
+<td align="right">1593.9913</td>
+<td align="right">621.9638</td>
+<td align="right">NA</td>
+<td align="right">576.5575</td>
+<td align="right">901.2636</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">TAS</td>
+<td align="right">2436.1464</td>
+<td align="right">99.64377</td>
+<td align="right">563.34548</td>
+<td align="right">964.2129</td>
+<td align="right">664.29177</td>
+<td align="right">1686.6367</td>
+<td align="right">649.5204</td>
+<td align="right">NA</td>
+<td align="right">544.3045</td>
+<td align="right">116.4815</td>
+</tr>
+<tr class="odd">
+<td align="left">short-term</td>
+<td align="left">VIC</td>
+<td align="right">3238.2575</td>
+<td align="right">NA</td>
+<td align="right">531.68962</td>
+<td align="right">995.3485</td>
+<td align="right">58.28058</td>
+<td align="right">1389.8229</td>
+<td align="right">591.8647</td>
+<td align="right">657.336890</td>
+<td align="right">555.8560</td>
+<td align="right">1071.0176</td>
+</tr>
+<tr class="even">
+<td align="left">short-term</td>
+<td align="left">WA</td>
+<td align="right">2616.0821</td>
+<td align="right">NA</td>
+<td align="right">839.44660</td>
+<td align="right">894.3592</td>
+<td align="right">NA</td>
+<td align="right">1649.2561</td>
+<td align="right">569.1805</td>
+<td align="right">120.200902</td>
+<td align="right">558.3455</td>
+<td align="right">429.0196</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">NSW</td>
+<td align="right">9431.8588</td>
+<td align="right">889.54926</td>
+<td align="right">2122.62374</td>
+<td align="right">3126.7517</td>
+<td align="right">2445.47895</td>
+<td align="right">2083.5521</td>
+<td align="right">1489.8537</td>
+<td align="right">405.629717</td>
+<td align="right">1086.5545</td>
+<td align="right">1346.8496</td>
+</tr>
+<tr class="even">
+<td align="left">long-term</td>
+<td align="left">NT</td>
+<td align="right">1541.9275</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">2405.5449</td>
+<td align="right">NA</td>
+<td align="right">2497.3363</td>
+<td align="right">914.2228</td>
+<td align="right">NA</td>
+<td align="right">1037.4101</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">QLD</td>
+<td align="right">8048.7698</td>
+<td align="right">NA</td>
+<td align="right">2052.01011</td>
+<td align="right">2988.1602</td>
+<td align="right">657.52905</td>
+<td align="right">2504.8455</td>
+<td align="right">1494.3471</td>
+<td align="right">1113.222519</td>
+<td align="right">1286.0574</td>
+<td align="right">3677.4959</td>
+</tr>
+<tr class="even">
+<td align="left">long-term</td>
+<td align="left">SA</td>
+<td align="right">6452.9949</td>
+<td align="right">139.77785</td>
+<td align="right">1527.73018</td>
+<td align="right">2476.6610</td>
+<td align="right">NA</td>
+<td align="right">2650.4032</td>
+<td align="right">2181.3045</td>
+<td align="right">NA</td>
+<td align="right">936.6888</td>
+<td align="right">1078.0337</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">TAS</td>
+<td align="right">7056.8262</td>
+<td align="right">NA</td>
+<td align="right">751.56346</td>
+<td align="right">2779.1104</td>
+<td align="right">NA</td>
+<td align="right">2061.3812</td>
+<td align="right">1630.8986</td>
+<td align="right">176.784427</td>
+<td align="right">1140.6046</td>
+<td align="right">131.9450</td>
+</tr>
+<tr class="even">
+<td align="left">long-term</td>
+<td align="left">VIC</td>
+<td align="right">7529.9019</td>
+<td align="right">333.60242</td>
+<td align="right">1694.26979</td>
+<td align="right">2653.9780</td>
+<td align="right">NA</td>
+<td align="right">2907.4611</td>
+<td align="right">2009.5969</td>
+<td align="right">139.872066</td>
+<td align="right">1399.3521</td>
+<td align="right">2218.0743</td>
+</tr>
+<tr class="odd">
+<td align="left">long-term</td>
+<td align="left">WA</td>
+<td align="right">9461.5137</td>
+<td align="right">NA</td>
+<td align="right">2043.96550</td>
+<td align="right">2482.6712</td>
+<td align="right">NA</td>
+<td align="right">4342.9462</td>
+<td align="right">1369.2020</td>
+<td align="right">745.813970</td>
+<td align="right">992.8695</td>
+<td align="right">1576.5862</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">NSW</td>
+<td align="right">17816.3699</td>
+<td align="right">292.62106</td>
+<td align="right">4134.59173</td>
+<td align="right">6243.2937</td>
+<td align="right">2056.36714</td>
+<td align="right">11915.5014</td>
+<td align="right">3413.6683</td>
+<td align="right">1132.245080</td>
+<td align="right">2267.6674</td>
+<td align="right">4869.5702</td>
+</tr>
+<tr class="odd">
+<td align="left">regular</td>
+<td align="left">NT</td>
+<td align="right">4266.4670</td>
+<td align="right">NA</td>
+<td align="right">946.88455</td>
+<td align="right">4659.8944</td>
+<td align="right">NA</td>
+<td align="right">2233.6636</td>
+<td align="right">864.2453</td>
+<td align="right">NA</td>
+<td align="right">1445.5084</td>
+<td align="right">680.3092</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">QLD</td>
+<td align="right">16819.4291</td>
+<td align="right">1042.08902</td>
+<td align="right">3475.75038</td>
+<td align="right">6410.2303</td>
+<td align="right">2004.57262</td>
+<td align="right">6450.8485</td>
+<td align="right">3706.6002</td>
+<td align="right">1795.225423</td>
+<td align="right">1940.8292</td>
+<td align="right">3285.1294</td>
+</tr>
+<tr class="odd">
+<td align="left">regular</td>
+<td align="left">SA</td>
+<td align="right">17954.2377</td>
+<td align="right">419.28578</td>
+<td align="right">1908.27255</td>
+<td align="right">6409.8253</td>
+<td align="right">4269.50272</td>
+<td align="right">4615.6068</td>
+<td align="right">3384.8337</td>
+<td align="right">587.776638</td>
+<td align="right">1986.0730</td>
+<td align="right">3389.1369</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">TAS</td>
+<td align="right">14782.1450</td>
+<td align="right">NA</td>
+<td align="right">2836.70064</td>
+<td align="right">6406.2396</td>
+<td align="right">NA</td>
+<td align="right">5763.1223</td>
+<td align="right">4435.6185</td>
+<td align="right">NA</td>
+<td align="right">3165.9351</td>
+<td align="right">911.4670</td>
+</tr>
+<tr class="odd">
+<td align="left">regular</td>
+<td align="left">VIC</td>
+<td align="right">16939.7166</td>
+<td align="right">NA</td>
+<td align="right">2675.80823</td>
+<td align="right">7124.2164</td>
+<td align="right">669.68925</td>
+<td align="right">5674.0389</td>
+<td align="right">3198.1327</td>
+<td align="right">1055.024825</td>
+<td align="right">2145.2008</td>
+<td align="right">4696.6332</td>
+</tr>
+<tr class="even">
+<td align="left">regular</td>
+<td align="left">WA</td>
+<td align="right">15756.2171</td>
+<td align="right">NA</td>
+<td align="right">3277.92123</td>
+<td align="right">6411.1839</td>
+<td align="right">NA</td>
+<td align="right">4799.8817</td>
+<td align="right">3570.3206</td>
+<td align="right">372.798659</td>
+<td align="right">2166.6710</td>
+<td align="right">4729.9921</td>
+</tr>
+</tbody>
+</table>
+<p><img src="figure/demographic.Rmd/benzo_type_name_usage_cateogry-1.png" width="1152" style="display: block; margin: auto;" /><img src="figure/demographic.Rmd/benzo_type_name_usage_cateogry-2.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre><code>## comparision with regular ddd</code></pre>
+<p><img src="figure/demographic.Rmd/benzo_type_name_usage_cateogry-3.png" width="1152" style="display: block; margin: auto;" /><img src="figure/demographic.Rmd/benzo_type_name_usage_cateogry-4.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="ddd_user-exploration---comparison-with-various-metrics-dose-users-and-scripts-per-population" class="section level1">
+<h1>ddd_user exploration - comparison with various metrics, dose, users, and scripts per population</h1>
+<ul>
+<li>% of users vs ddd_user</li>
+<li><h1 id="scripts-population-vs-ddd_user">scripts / population vs ddd_user</h1></li>
+</ul>
+<pre><code>Warning: Column `age` joining factor and character vector, coercing into character vector</code></pre>
+<pre><code>Joining, by = c(&quot;lga&quot;, &quot;age&quot;, &quot;state&quot;, &quot;supply_year&quot;)</code></pre>
+<pre><code>Warning: Column `age` joining character vector and factor, coercing into character vector</code></pre>
+<p><img src="figure/demographic.Rmd/explore_ddd_user-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre><code>Joining, by = c(&quot;lga&quot;, &quot;age&quot;, &quot;state&quot;, &quot;supply_year&quot;)</code></pre>
+<pre><code>Warning: Column `age` joining character vector and factor, coercing into character vector</code></pre>
+<p><img src="figure/demographic.Rmd/explore_ddd_user-2.png" width="1152" style="display: block; margin: auto;" /></p>
+<pre><code>Joining, by = c(&quot;lga&quot;, &quot;age&quot;, &quot;state&quot;, &quot;supply_year&quot;)</code></pre>
+<pre><code>Warning: Column `age` joining character vector and factor, coercing into character vector</code></pre>
+<p><img src="figure/demographic.Rmd/explore_ddd_user-3.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="comparision-between-ddd-and-dddu-by-state" class="section level1">
+<h1>comparision between DDD and DDDu by state</h1>
+<table>
+<thead>
+<tr class="header">
+<th align="left">state</th>
+<th align="right">ddd.opioid</th>
+<th align="right">ddd.benzo</th>
+<th align="right">dddu.opioid</th>
+<th align="right">dddu.benzo</th>
+<th align="right">proportion.opioid</th>
+<th align="right">proportion.benzo</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">ACT</td>
+<td align="right">13.955540</td>
+<td align="right">9.029488</td>
+<td align="right">1407.003</td>
+<td align="right">1804.445</td>
+<td align="right">9.918519</td>
+<td align="right">5.004019</td>
+</tr>
+<tr class="even">
+<td align="left">NSW</td>
+<td align="right">14.975929</td>
+<td align="right">11.869823</td>
+<td align="right">1397.384</td>
+<td align="right">2143.415</td>
+<td align="right">10.717125</td>
+<td align="right">5.537898</td>
+</tr>
+<tr class="odd">
+<td align="left">NT</td>
+<td align="right">5.551679</td>
+<td align="right">2.631206</td>
+<td align="right">1048.476</td>
+<td align="right">1327.136</td>
+<td align="right">5.294954</td>
+<td align="right">1.982624</td>
+</tr>
+<tr class="even">
+<td align="left">QLD</td>
+<td align="right">18.475830</td>
+<td align="right">15.892007</td>
+<td align="right">1456.877</td>
+<td align="right">2174.632</td>
+<td align="right">12.681647</td>
+<td align="right">7.307918</td>
+</tr>
+<tr class="odd">
+<td align="left">SA</td>
+<td align="right">23.055065</td>
+<td align="right">16.608756</td>
+<td align="right">1713.697</td>
+<td align="right">2251.405</td>
+<td align="right">13.453191</td>
+<td align="right">7.377166</td>
+</tr>
+<tr class="even">
+<td align="left">TAS</td>
+<td align="right">27.632931</td>
+<td align="right">21.154778</td>
+<td align="right">1980.182</td>
+<td align="right">2619.686</td>
+<td align="right">13.954472</td>
+<td align="right">8.075536</td>
+</tr>
+<tr class="odd">
+<td align="left">VIC</td>
+<td align="right">14.788977</td>
+<td align="right">16.015532</td>
+<td align="right">1198.451</td>
+<td align="right">2250.035</td>
+<td align="right">12.339961</td>
+<td align="right">7.117965</td>
+</tr>
+<tr class="even">
+<td align="left">WA</td>
+<td align="right">15.571786</td>
+<td align="right">10.900443</td>
+<td align="right">1399.054</td>
+<td align="right">1943.223</td>
+<td align="right">11.130026</td>
+<td align="right">5.609506</td>
+</tr>
+</tbody>
+</table>
+<div id="session-information" class="section level2">
+<h2>Session information</h2>
+<pre><code>R version 3.4.4 (2018-03-15)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Ubuntu 18.04.1 LTS
+
+Matrix products: default
+BLAS: /usr/lib/x86_64-linux-gnu/openblas/libblas.so.3
+LAPACK: /usr/lib/x86_64-linux-gnu/libopenblasp-r0.2.20.so
+
+locale:
+ [1] LC_CTYPE=en_AU.UTF-8       LC_NUMERIC=C               LC_TIME=en_AU.UTF-8        LC_COLLATE=en_AU.UTF-8     LC_MONETARY=en_AU.UTF-8    LC_MESSAGES=en_AU.UTF-8    LC_PAPER=en_AU.UTF-8      
+ [8] LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C             LC_MEASUREMENT=en_AU.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+ [1] grid      stats4    parallel  stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] bindrcpp_0.2.2        keyring_1.1.0         RPostgreSQL_0.6-2     DBI_1.0.0             spbabel_0.4.8         sp_1.3-1              sf_0.6-3              mapview_2.4.0        
+ [9] tmaptools_2.0         tmap_2.0              tictoc_1.0            forcats_0.3.0         dplyr_0.7.8           purrr_0.2.5           readr_1.1.1           tidyr_0.8.1          
+[17] tibble_1.4.2          ggplot2_3.1.0         tidyverse_1.2.1       multidplyr_0.0.0.9000 IRanges_2.12.0        S4Vectors_0.16.0      BiocGenerics_0.24.0   fuzzyjoin_0.1.4      
+[25] DataCache_0.9         wrapr_1.5.1           readstata13_0.9.2     lubridate_1.7.4       knitr_1.20            stringr_1.3.1         magrittr_1.5          seas_0.5-2           
+[33] MASS_7.3-50           workflowr_1.1.1       nvimcom_0.9-75       
+
+loaded via a namespace (and not attached):
+ [1] colorspace_1.3-2    class_7.3-14        gdalUtils_2.0.1.14  leaflet_2.0.1       rgdal_1.3-3         rprojroot_1.3-2     satellite_1.0.1     base64enc_0.1-3     dichromat_2.0-0    
+[10] rstudioapi_0.7      xml2_1.2.0          codetools_0.2-15    R.methodsS3_1.7.1   jsonlite_1.5        broom_0.5.0         png_0.1-7           R.oo_1.22.0         rgeos_0.3-28       
+[19] shiny_1.1.0         compiler_3.4.4      httr_1.3.1          backports_1.1.2     assertthat_0.2.0    lazyeval_0.2.1      cli_1.0.0           later_0.7.3         htmltools_0.3.6    
+[28] tools_3.4.4         gtable_0.2.0        glue_1.3.0          Rcpp_1.0.0          cellranger_1.1.0    raster_2.6-7        nlme_3.1-137        iterators_1.0.10    crosstalk_1.0.0    
+[37] lwgeom_0.1-4        rvest_0.3.2         mime_0.5            XML_3.98-1.12       scales_1.0.0        hms_0.4.2           promises_1.0.1      RColorBrewer_1.1-2  yaml_2.1.19        
+[46] stringi_1.2.3       highr_0.7           foreach_1.4.4       spDataLarge_0.2.7.3 e1071_1.6-8         spData_0.2.9.0      rlang_0.3.0.1       pkgconfig_2.0.2     evaluate_0.10.1    
+[55] lattice_0.20-35     bindr_0.1.1         labeling_0.3        htmlwidgets_1.2     tidyselect_0.2.5    plyr_1.8.4          R6_2.3.0            pillar_1.3.0        haven_1.1.2        
+[64] whisker_0.3-2       withr_2.1.2         units_0.6-0         modelr_0.1.2        crayon_1.3.4        KernSmooth_2.23-15  rmarkdown_1.10      readxl_1.1.0        git2r_0.23.0       
+[73] webshot_0.5.0       digest_0.6.15       classInt_0.2-3      xtable_1.8-2        httpuv_1.4.5        R.utils_2.6.0       munsell_0.5.0       viridisLite_0.3.0  </code></pre>
+</div>
+</div>
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+<hr>
+<p>
+  This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a>
+  analysis was created with
+  <a href="https://github.com/jdblischak/workflowr">workflowr</a> 1.1.1
+</p>
+<hr>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
