@@ -235,49 +235,6 @@ singleFacetPlot_boxplot = function( df_raw_input, var1, var2 ) {
 			ggtitle( paste("The range of LGA number of users for each", var1, "facetted by", var2)) +
 			facet_wrap( as.formula(paste("~", var2)), ncol=2, scales='fixed')
 }
-
-# test_multiplots  --------------------------------------------------------------
-test_multiplots <- function () {
-
-  variables = qw("gender age state year ")
-  variables = qw("year state")
-  user_status_df %>% 
-    filter( continuing_user ) %>% 
-    generate_multiplots( variables )
-}
-
-# multiplots  --------------------------------------------------------------
-
-generate_multiplots <- function ( df_raw_input, variables = qw("gender age") , output="screen" ) {
-		
-	to_plot = combn( variables, 2 , simplify=FALSE)
-	to_plot=c(to_plot, lapply(to_plot, rev))
-	plot_list = list()
-
-	for (i in 1:length(to_plot)) {
-		cat( to_plot[[ i ]][1], to_plot[[ i ]][2], i, "\n")
-		plot_list[[i]] <- singleFacetPlot_boxplot( df_raw_input, to_plot[[ i ]][1], to_plot[[ i ]][2] )
-        if (output=="screen") {
-          print(plot_list[[i]])
-        } else if (endsWith(output, "tiff")) {
-          file_name = paste("graphics/boxplot_", to_plot[[ i ]][1], "_", to_plot[[ i ]][2], i, ".tiff", sep="")
-          tiff(file_name)
-          print(plot_list[[i]])
-          dev.off()
-        }
-	}
-
-    if (endsWith(output, ".pdf")) {
-      pdf(output)
-      for (i in 1:length(plot_list)) {
-          print(plot_list[[i]])
-      }
-      dev.off()
-    }
-    return(plot_list)
-
-}
-
 #-------------------------------------------------------------------------------------------
 
 is_outlier <- function(x) {
@@ -367,28 +324,6 @@ age_grouping <- function( age, n=25 ) {
 #-----------------------------------------------------------------------------
 
 rows = function(x) lapply(seq_len(nrow(x)), function(i) lapply(x,"[",i))
-
-
-
-
-#-----------------------------------------------------------------------------
-
-find_pill_group = function( supply_date, difference, ndays, threshold  = .25) {
-  id=1
-  sum_difference = 0
-  sum_days = 0
-  df=data.frame( supply_date, difference, ndays)
-  rv=c()
-  for (A in rows(df)) {
-    sum_difference = sum_difference + A$difference
-    sum_days = sum_days + A$ndays
-    rv <- c( rv, id )
-    if (is.na(A$difference ) || is.na(A$ndays)  || ( (sum_days / sum_difference ) < threshold)) {
-      id<- id+1
-    }
-  }  
-  rv
-}
 
 
 
