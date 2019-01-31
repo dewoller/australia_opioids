@@ -376,6 +376,63 @@ function () {
 
 
 ############################################################################################
+# select_and_standardise_ddd_users
+############################################################################################
+#  -------------------------------------------------
+select_and_standardise_ddd_users <- function( df_tostandardise, 
+                                       standardise_over, 
+                                       join_with = c() , 
+                                       df_population=df_population, 
+                                       standardisation_default = standardisation_default_population 
+                                       ) {
+
+  # standardise, but base standardisation on the actual number of users
+
+  standardise_using <- qw("age sex")  %>%   
+    setdiff( standardise_over ) %>% 
+    setdiff( join_with )
+
+  standardisation_default %>%
+    group_by_( .dots=standardise_using ) %>%
+    summarise( population = sum( population )) %>% 
+    { . } -> this_standardisation_default 
+
+  df_tostandardise %>%  # group by everything we want to group by to get base level number of doses
+    ungroup() %>%
+      group_by_( .dots=c( standardise_over, join_with, standardise_using, 'supply_year' )) %>%
+      dplyr::summarise( n_dose = sum( n_dose ), n_user = n_distinct( pin ) ) %>%
+      group_by_( .dots=c( standardise_over, join_with, standardise_using )) %>%
+      # calculate proportion at this level
+      dplyr::summarise( proportion = sum((n_dose * 1000 * 10)) / sum(n_user * my_year_length( supply_year ) )) %>%  
+      #
+      # now that we have the proportion for each subgroup,
+      # now we standardise that proportion based on the total population
+      # first throw away extraneous variables brought in by previous join, 
+      # eg population and person_days
+      # all we want is the proportion,and the key variables
+      #
+      select_( .dots = c(standardise_over, join_with, standardise_using, "proportion") ) %>%
+      #
+      # get the population grouped by levels we want to standardise on, that is, 
+      # the standardisation variables (possibly age and/or sex, as long as they are not
+      # included in the non-standard_vars), and join_with, eg. supply_year
+      inner_join( this_standardisation_default, by = c(standardise_using ) ) %>%
+      mutate( proportion_standardized = proportion * population ) %>%  
+
+      # now, sum up our standardized_proportion, 
+      # grouped on age and/or sex as long as we ae not using it elsewhere
+      group_by_( .dots=c( standardise_over, join_with )) %>%  # no standardize_vars here
+      dplyr::summarise( proportion_standardized = sum(proportion_standardized )) %>%
+        select_( .dots = c( standardise_over, join_with, "proportion_standardized") ) %>% # and cleanup
+        # divide by the total population, and standardisation finished
+        mutate( ddd_user = proportion_standardized /  sum(this_standardisation_default$population) ) %>%  
+          # finished standardisation, cleanup by selecting only variables of interest
+          select_( .dots = c(standardise_over, join_with, "ddd_user") ) %>%
+          ungroup()
+}
+
+
+############################################################################################
 # select_and_standardise_ddd 
 ############################################################################################
 #  -------------------------------------------------

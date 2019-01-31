@@ -280,3 +280,50 @@ df_stats %>%
   kable()
 ```
 
+
+
+```{r benzo_and_opioid_by_month }
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  distinct( pin, age, drug_type, supply_month ) %>%
+  count( pin, age, drug_type) %>%
+  group_by( drug_type, age ) %>%
+  summarise( mean = mean( n )) %>%
+  kable()
+
+
+get_continuing_df_10_year_age_groups ( base_table = 'continuing', benzo=TRUE ) %>%
+  mutate(drug_type=ifelse(is_benzo(type_code), 'benzodiazepine', 'opioid'),
+         type_name = ifelse( !is_benzo( type_code), type_name, 
+                            stringr::str_extract( generic_name, '[^ ]*')),
+         quarter = quarter(supply_date, with_year = TRUE), 
+         supply_month = format( supply_date ,"%Y-%m"),  
+         supply_year = as.character(year(supply_date)) 
+         ) %>% 
+  distinct( pin, age, drug_type, supply_month ) %>%
+  count( pin, age, drug_type) %>%
+  group_by( drug_type, age ) %>%
+  summarise( mean = mean( n )) %>%
+  kable
+
+
+```
+
+
+```{r violin_urban_drug_type_state}
+
+
+df %>%
+  inner_join( df_patient, by='pin' ) %>%
+  inner_join( df_population %>% distinct( lga, urbanization), by='lga' ) %>%
+  filter( lga != '.' & lga != 99399 ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, state, drug_type, urbanization)) %>% 
+  inner_join( df_population %>% filter( supply_year==2013) %>% group_by( lga ) %>% summarise( population=sum(population)), by='lga') %>%
+  ggplot(mapping=aes(x = state, y= ddd, color=state, fill=state, weight=population)) +
+  geom_violin( )  +
+  ggtitle( "The range of LGA total DDD for each state facetted by drug_type and urbanizaiton") +
+  facet_grid( drug_type ~ urbanization, scales='fixed')
+```
+
+

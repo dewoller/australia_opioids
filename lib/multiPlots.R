@@ -1,8 +1,8 @@
 
 #+ datasetup1, echo=FALSE, include=FALSE
 
-var1='sex'
-var2='age'
+var1='state'
+var2='urbanization'
 
 df_population %>% 
   filter( supply_year==2013)  %>%

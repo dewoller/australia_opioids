@@ -1,0 +1,44 @@
+
+---
+title: "Benzo-opioid v2 analysis"
+author:  "Mofi Islam and Dennis Wollersheim "
+date: "2018-04-30"
+output:
+workflowr::wflow_html:
+toc: false
+---
+
+```{r pre_initial, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+rm(list=ls())
+options(width = 200)
+show_code = FALSE
+source("lib/functions.R")
+source("lib/mapping_functions.R")
+source("lib/standardisation.R")
+source("lib/get_data.R")
+source("lib/generate_data_frames.R")
+library('tidyverse')
+opts_chunk$set(echo = FALSE)
+
+```
+
+```{r initial, results='hide', message=FALSE, warning=FALSE}
+
+read.csv('data/population.csv' ) %>% 
+  as.tibble() %>% 
+  rename( period = X ) %>%
+  mutate( period = as.character( period ) ) %>%
+  gather( category, population, -period ) %>% 
+  separate( category, qc( what, gender, state ), sep="\\.\\.\\.\\.") %>% 
+  filter( startsWith( period, 'Jun')) %>%
+  select( -what ) %>%
+  { . } -> df_pop
+
+df_pop %>% write.csv('/tmp/australian_population.csv', row.names=FALSE)
+
+df_pop %>%
+  ggplot( aes( period, population, fill=state )) +
+  geom_col() +xc
+
+```

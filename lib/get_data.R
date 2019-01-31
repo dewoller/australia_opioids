@@ -33,6 +33,34 @@ get_continuing_df <- function(
 
 
 # -------------------------------------------------
+get_continuing_df_10_year_age_groups <- function( 
+                              base_table="continuing_rr", 
+                              benzo=FALSE
+                              ) {
+
+  type_code_limit = ifelse( benzo, 10, 9 )
+  query  <-  paste0( "
+                    SELECT pin, gender, age, lga, item_code, type_code, generic_name  ,
+                    type_name, supply_date, quantity, unit_wt, ddd_mg_factor 
+                    FROM continuing." , base_table , " r 
+                    JOIN continuing.item i USING (item_code) 
+                    JOIN public.generictype USING (type_code)
+                    WHERE (EXTRACT( YEAR FROM supply_date ) != '2017') ",
+                    ifelse( benzo, '', " AND (type_code <> 10)") 
+                    )
+
+  my_db_get_query( query ) %>%
+    as.tibble() %>%
+    mutate( n_dose = (unit_wt * quantity / ddd_mg_factor ),
+           agen=ifelse( age=='100+', 101, suppressWarnings( as.numeric( age ))),
+           age = cut( agen, 0:11*10 )
+           ) %>%
+    select( -unit_wt, -quantity, -ddd_mg_factor, -agen, -item_code) %>% 
+    rename(sex=gender) 
+}
+
+
+# -------------------------------------------------
 get_drugs <- function( ) {
 
   query  <-  paste0( "

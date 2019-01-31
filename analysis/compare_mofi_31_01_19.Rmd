@@ -1,0 +1,259 @@
+---
+title: "Benzo-opioid v2 analysis"
+author:  "Mofi Islam and Dennis Wollersheim "
+date: "2018-04-30"
+output:
+workflowr::wflow_html:
+toc: false
+---
+
+```{r pre_initial, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+rm(list=ls())
+options(width = 200)
+show_code = FALSE
+source("lib/functions.R")
+source("lib/mapping_functions.R")
+source("lib/standardisation.R")
+source("lib/get_data.R")
+source("lib/generate_data_frames.R")
+library('tidyverse')
+opts_chunk$set(echo = FALSE)
+
+```
+
+```{r initial, results='hide', message=FALSE, warning=FALSE}
+
+read.csv('data/population.csv' ) %>% 
+  as.tibble() %>% 
+  rename( period = X ) %>%
+  mutate( period = as.character( period ) ) %>%
+  gather( category, population, -period ) %>% 
+  separate( category, qc( what, gender, state ), sep="\\.\\.\\.\\.") %>% 
+  filter( startsWith( period, 'Jun')) %>%
+  select( -what ) %>%
+  { . } -> df_pop
+
+
+
+dataset="_rr"
+dataset=""
+
+
+get_data_from_cache(dataset = dataset)
+
+
+```
+
+
+```{r compare_opioids}
+
+read.csv( 'data/mofi_population_31-09-19.csv') %>% 
+  as_tibble() %>% 
+  filter( Year!= 'Age' & Year != 'what' ) %>%
+  gather( column, population, -Year ) %>%
+  mutate( Year=as.character( Year ) ) %>%
+  mutate( population=as.numeric( population ) ) %>%
+  mutate( column = as.numeric( str_replace( column, 'A',''))) %>%
+  filter( floor( (column - 1) / 19 ) == (column-1)/19) %>%
+  mutate( column = (column - 1) / 19  + 1 ) %>%
+  rename( supply_year = Year, state=column ) %>%
+  filter( supply_year>=2013 & supply_year <=2016   ) %>% 
+  { . } -> df_state_population
+
+# make sure we have the same states
+read.csv( 'data/mofi_population_31-09-19.csv') %>% 
+  filter( Year=='what' ) %>%
+  gather( col, state )  %>%
+  filter( state != '' ) %>%
+  filter( col!= 'Year') %>% 
+  mutate( col=1:n(), ) %>% 
+  mutate( state2 = get_state_code_from_lga( col ) )
+
+
+
+
+
+
+df %>%
+  inner_join( df_patient, by='pin') %>%
+  group_by( drug_type, supply_year, state ) %>%
+  summarise( n_dose = sum( n_dose )) %>%
+  inner_join( df_state_population, by = c("supply_year", "state") ) %>%
+  mutate( ddd = n_dose * 10000 / (population * my_year_length( supply_year ) )) %>%  
+  select( -n_dose, -population ) %>%
+  spread( state, ddd ) %>% 
+  { . } -> my_results
+
+```
+
+
+
+```{r direct_calculation_ddd_by_state}
+
+query  <-  "
+				  SELECT state, type_code, supply_date, quantity *  unit_wt / ddd_mg_factor as n_dose
+				  FROM continuing.continuing r 
+				  JOIN continuing.item i USING (item_code) 
+				  WHERE (EXTRACT( YEAR FROM supply_date ) != '2017')
+				  AND item_code != '91194Q'
+"
+my_db_get_query( query ) %>%
+  as_tibble() %>%
+  mutate(  supply_year = as.character(year(supply_date)), 
+        drug_type=ifelse(is_benzo(type_code), 'benzo', 'opioid')) %>% 
+		 { . } -> df_simple
+  
+
+df_simple %>%
+  group_by( drug_type, supply_year, state ) %>%
+  summarise( n_dose = sum( n_dose )) %>%
+  inner_join( df_state_population, by = c("supply_year", "state") ) %>%
+  mutate( ddd = n_dose * 10000 / (population * my_year_length( supply_year ) )) %>%  
+  select( -n_dose, -population ) %>%
+  spread( state, ddd ) %>% 
+  { . } -> my_results_simple
+
+
+read.csv('data/mofi_result.csv') %>%
+  as_tibble() %>% 
+  mutate( supply_year = as.character( supply_year) ) %>%
+  { . } -> mofi_results
+
+
+my_results_simple %>%
+  gather( state, ddd, -supply_year, -drug_type ) %>% 
+  inner_join( mofi_results %>%
+              gather( state, ddd, -supply_year, -drug_type ) , 
+            by=qc( drug_type, supply_year, state ), suffix=qc( .dennis, .mofi )) %>%
+  mutate (difference = ddd.mofi - ddd.dennis, 
+          proportion = difference / ddd.dennis, 
+          pct = ddd.dennis/ddd.mofi ) %>% 
+  arrange( pct ) %>% write.csv('/tmp/dennis_mofi_comparision.csv' )
+
+
+```
+
+
+```{r #users_and_dddu}
+
+query  <-  "
+SELECT state,  drug_type, EXTRACT( YEAR FROM supply_date ) as supply_year, count(distinct pin) as n, sum( quantity *  unit_wt / ddd_mg_factor) as n_dose
+FROM continuing.continuing r 
+JOIN continuing.item i USING (item_code) 
+JOIN generictype t USING (type_code) 
+WHERE (EXTRACT( YEAR FROM supply_date ) != '2017')
+AND item_code != '91194Q'
+GROUP BY 1,2,3
+"
+my_db_get_query( query ) %>%
+  as_tibble() %>%
+  { . } -> df_simple
+
+
+df_simple %>%
+  select( -n_dose) %>%
+  spread( state, n ) %>% 
+  { . } -> my_results_simple
+
+df_simple %>%
+  mutate( dddu = n_dose * 1000 / (n * my_year_length( supply_year ) )) 
+
+
+
+```
+
+```{r standardised_ddd_by_lga_then_state}
+
+df %>%
+  filter( type_name != 'Other'  ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, drug_type, state, supply_year )) %>% 
+  group_by( drug_type, state, supply_year ) %>% 
+  summarise( ddd_standardised_by_lga = mean( ddd ) ) %>% 
+  { . } -> df_state_by_lga_ddd
+
+query  <-  "
+SELECT state,  
+drug_type, 
+gender as sex, 
+CASE 
+  WHEN age='100+' THEN '65+'
+  WHEN cast( age as integer) <=19 THEN '0-19'
+  WHEN cast( age as integer) <=44 THEN '20-44'
+  WHEN cast( age as integer) <=64 THEN '45-64'
+  ELSE '65+' 
+END as age,
+EXTRACT( YEAR FROM supply_date ) as supply_year, 
+sum( quantity *  unit_wt / ddd_mg_factor) as n_dose
+FROM continuing.continuing r 
+JOIN continuing.item i USING (item_code) 
+JOIN generictype t USING (type_code) 
+WHERE (EXTRACT( YEAR FROM supply_date ) != '2017')
+AND item_code != '91194Q'
+GROUP BY 1,2,3,4,5
+"
+my_db_get_query( query ) %>%
+  as_tibble() %>%
+  mutate( supply_year = as.character( supply_year )) %>%
+  { . } -> df_simple
+
+
+df_simple %>%
+  select_and_standardise_ddd( standardise_over = qc(drug_type, state, supply_year )) %>% 
+  { . } -> df_state_ddd
+
+df_state_by_lga_ddd %>% 
+  inner_join( df_state_ddd, by = qc(drug_type, state, supply_year )) %>%
+  write.csv( '/tmp/standardised.csv')
+
+  View
+
+```
+
+```{r check_lga_level_summarisation}
+
+query  <-  "
+SELECT lga,
+drug_type, 
+gender as sex, 
+CASE 
+WHEN age='100+' THEN '65+'
+WHEN cast( age as integer) <=19 THEN '0-19'
+WHEN cast( age as integer) <=44 THEN '20-44'
+WHEN cast( age as integer) <=64 THEN '45-64'
+  ELSE '65+' 
+END as age,
+EXTRACT( YEAR FROM supply_date ) as supply_year, 
+sum( quantity *  unit_wt / ddd_mg_factor) as n_dose
+FROM continuing.continuing r 
+JOIN continuing.item i USING (item_code) 
+JOIN generictype t USING (type_code) 
+WHERE (EXTRACT( YEAR FROM supply_date ) != '2017')
+AND item_code != '91194Q'
+GROUP BY 1,2,3,4,5
+"
+my_db_get_query( query ) %>%
+  as_tibble() %>%
+  mutate( supply_year = as.character( supply_year ) ) %>%
+  mutate( state = get_state_code_from_lga( lga ) ) %>%
+  { . } -> df_simple
+
+df_simple %>%
+filter( lga != '.' & !endsWith( lga,'99') ) %>%
+  select_and_standardise_ddd( standardise_over = qc(lga, drug_type, state, supply_year )) %>% 
+  group_by( drug_type, state, supply_year ) %>% 
+  summarise( ddd_standardised_by_lga = mean( ddd ) ) %>% 
+  { . } -> df_state_by_lga_ddd1
+
+df %>%
+  filter( type_name != 'Other'  ) %>%
+  inner_join( df_patient, by='pin' ) %>%
+  filter( lga != '.' & !endsWith( lga,'99') ) %>% 
+  group_by( drug_type, supply_year, state, lga, sex, age ) %>%
+  summarise( n_dose = sum( n_dose )) %>%
+  { . } -> b
+
+```
+
