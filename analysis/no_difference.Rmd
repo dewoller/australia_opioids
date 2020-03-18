@@ -20,22 +20,20 @@ source("lib/standardisation.R")
 source("lib/get_data.R")
 source("lib/generate_data_frames.R")
 library('tidyverse')
-opts_chunk$set(echo = FALSE)
-opts_chunk$set(fig.width=12, fig.height=8)
 
 ```
 
 # load in data
 
-```{r load, results='hide', message=FALSE, warning=FALSE}
+```{r load }
 
 
-foreign::read.dta( '../benzodiazepine/data/nobackup/match_multiyear.v2.dta') %>% 
+foreign::read.dta( '../benzodiazepine/data/nobackup/match_multiyear.v2.dta') %>%
   as_tibble() %>%
   { . } -> df_my
 
 
-foreign::read.dta( '../benzodiazepine/data/nobackup/match_single_period.v1.dta') %>% 
+foreign::read.dta( '../benzodiazepine/data/nobackup/match_single_period.v1.dta') %>%
   as_tibble() %>%
   { . } -> df_sp
 
@@ -49,7 +47,7 @@ foreign::read.dta( '../benzodiazepine/data/nobackup/match_single_period.v1.dta')
 
   df_my %>%
   group_by( pin) %>%
-  summarise( ndays = sum(ndays)) %>% 
+  summarise( ndays = sum(ndays)) %>%
   { . } -> df_my_sum
 
 ```
@@ -74,14 +72,14 @@ One error, person had duplicate drug of choice
 
 df_sp %>%
   select( pin, ndays) %>%
-  inner_join( df_my_sum, by='pin') %>% 
+  inner_join( df_my_sum, by='pin') %>%
   { . } -> df_joined
 
-df_joined %>% 
+df_joined %>%
   filter( ndays.x != ndays.y)
 
 df_sp %>%
-  filter( pin == '2630699530') %>% 
+  filter( pin == '2630699530') %>%
   select( doc_benzo)
 
 
