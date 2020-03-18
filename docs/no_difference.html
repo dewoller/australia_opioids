@@ -502,10 +502,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstreebf3fcb032e7eaa67b2b94371d9f75f839ab373e5targetblankbf3fcb0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dewoller/australia_opioids/tree/bf3fcb032e7eaa67b2b94371d9f75f839ab373e5" target="_blank">bf3fcb0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstreeeda4fa3f58fecd73b731ef40a25daa3b937f76e1targetblankeda4fa3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dewoller/australia_opioids/tree/eda4fa3f58fecd73b731ef40a25daa3b937f76e1" target="_blank">eda4fa3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstreebf3fcb032e7eaa67b2b94371d9f75f839ab373e5targetblankbf3fcb0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstreeeda4fa3f58fecd73b731ef40a25daa3b937f76e1targetblankeda4fa3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -570,6 +570,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/dewoller/australia_opioids/blob/eda4fa3f58fecd73b731ef40a25daa3b937f76e1/analysis/no_difference.Rmd" target="_blank">eda4fa3</a>
+</td>
+<td>
+Dennis Wollersheim
+</td>
+<td>
+2020-03-17
+</td>
+<td>
+wflow_publish(“analysis/no_difference.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/dewoller/australia_opioids/0e99a80fa1dd80813be6c3ae0feb0834c750b90d/docs/no_difference.html" target="_blank">0e99a80</a>
+</td>
+<td>
+Dennis Wollersheim
+</td>
+<td>
+2020-03-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/dewoller/australia_opioids/blob/bf3fcb032e7eaa67b2b94371d9f75f839ab373e5/analysis/no_difference.Rmd" target="_blank">bf3fcb0</a>
 </td>
 <td>
@@ -591,15 +625,31 @@ wflow_publish(“analysis/no_difference.Rmd”)
 </div>
 <div id="load-in-data" class="section level1">
 <h1>load in data</h1>
+<pre class="r"><code>foreign::read.dta( &#39;../benzodiazepine/data/nobackup/match_multiyear.v2.dta&#39;) %&gt;%
+  as_tibble() %&gt;%
+  { . } -&gt; df_my
+
+
+foreign::read.dta( &#39;../benzodiazepine/data/nobackup/match_single_period.v1.dta&#39;) %&gt;%
+  as_tibble() %&gt;%
+  { . } -&gt; df_sp</code></pre>
 <div id="summarise-the-multiyear-data" class="section level2">
 <h2>summarise the multiyear data</h2>
+<pre class="r"><code>  df_my %&gt;%
+  group_by( pin) %&gt;%
+  summarise( ndays = sum(ndays)) %&gt;%
+  { . } -&gt; df_my_sum</code></pre>
 </div>
 <div id="merge-and-compare-the-multiyear-and-single-year-data" class="section level2">
 <h2>merge and compare the multiyear and single year data</h2>
+<pre class="r"><code>df_sp %&gt;%
+  summarise( sum( ndays))</code></pre>
 <pre><code># A tibble: 1 x 1
   `sum(ndays)`
          &lt;dbl&gt;
 1      7971982</code></pre>
+<pre class="r"><code>df_my %&gt;%
+  summarise( sum( ndays))</code></pre>
 <pre><code># A tibble: 1 x 1
   `sum(ndays)`
          &lt;dbl&gt;
@@ -608,11 +658,21 @@ wflow_publish(“analysis/no_difference.Rmd”)
 <div id="compare-individual-peeople" class="section level2">
 <h2>compare individual peeople</h2>
 <p>One error, person had duplicate drug of choice</p>
+<pre class="r"><code>df_sp %&gt;%
+  select( pin, ndays) %&gt;%
+  inner_join( df_my_sum, by=&#39;pin&#39;) %&gt;%
+  { . } -&gt; df_joined
+
+df_joined %&gt;%
+  filter( ndays.x != ndays.y)</code></pre>
 <pre><code># A tibble: 2 x 3
          pin ndays.x ndays.y
        &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
 1 2630699530     134     268
 2 2630699530     134     268</code></pre>
+<pre class="r"><code>df_sp %&gt;%
+  filter( pin == &#39;2630699530&#39;) %&gt;%
+  select( doc_benzo)</code></pre>
 <pre><code># A tibble: 2 x 1
   doc_benzo
   &lt;chr&gt;    
@@ -625,6 +685,7 @@ wflow_publish(“analysis/no_difference.Rmd”)
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.6.1 (2019-07-05)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: Ubuntu 18.04.4 LTS
