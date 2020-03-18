@@ -80,7 +80,7 @@ df_joined %>%
 
 df_sp %>%
   filter( pin == '2630699530') %>%
-  select( doc_benzo)
+  select( pin, ndays, doc_benzo)
 
 
 ```
