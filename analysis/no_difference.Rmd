@@ -1,6 +1,6 @@
 
 ---
-title: "All Australia Benzo and Opioid Basic Stats"
+title: "Comparision between single year and multiyear dta file showing benzo opioid overlaps"
 author:  "Mofi Islam and Dennis Wollersheim "
 date: "2020-03-18"
 output:
@@ -23,7 +23,9 @@ library('tidyverse')
 
 ```
 
-# load in data
+TLDR:  There is no difference between the files
+
+## load in data
 
 ```{r load }
 
@@ -39,7 +41,6 @@ foreign::read.dta( '../benzodiazepine/data/nobackup/match_single_period.v1.dta')
 
 
 ```
-
 
 ## summarise the multiyear data
 
