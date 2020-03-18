@@ -13,7 +13,7 @@
 
 <meta name="date" content="2020-03-18" />
 
-<title>All Australia Benzo and Opioid Basic Stats</title>
+<title>Comparision between single year and multiyear dta file showing benzo opioid overlaps</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -384,7 +384,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">All Australia Benzo and Opioid Basic Stats</h1>
+<h1 class="title toc-ignore">Comparision between single year and multiyear dta file showing benzo opioid overlaps</h1>
 <h4 class="author">Mofi Islam and Dennis Wollersheim</h4>
 <h4 class="date">2020-03-18</h4>
 
@@ -502,10 +502,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstree0837c0d93729359d015065aa8c45b6259c95c93ctargetblank0837c0da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dewoller/australia_opioids/tree/0837c0d93729359d015065aa8c45b6259c95c93c" target="_blank">0837c0d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstree1d7d0056901beb2e696373691e48af68bc48f3f4targetblank1d7d005a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/dewoller/australia_opioids/tree/1d7d0056901beb2e696373691e48af68bc48f3f4" target="_blank">1d7d005</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstree0837c0d93729359d015065aa8c45b6259c95c93ctargetblank0837c0da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomdewolleraustraliaopioidstree1d7d0056901beb2e696373691e48af68bc48f3f4targetblank1d7d005a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -565,6 +565,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/dewoller/australia_opioids/blob/1d7d0056901beb2e696373691e48af68bc48f3f4/analysis/no_difference.Rmd" target="_blank">1d7d005</a>
+</td>
+<td>
+Dennis Wollersheim
+</td>
+<td>
+2020-03-17
+</td>
+<td>
+wflow_publish(“analysis/no_difference.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/dewoller/australia_opioids/9afe8c96efb76c3d6adfd2babef513d2860d4810/docs/no_difference.html" target="_blank">9afe8c9</a>
+</td>
+<td>
+Dennis Wollersheim
+</td>
+<td>
+2020-03-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -691,8 +725,9 @@ wflow_publish(“analysis/no_difference.Rmd”)
 </div>
 </div>
 </div>
-<div id="load-in-data" class="section level1">
-<h1>load in data</h1>
+<p>TLDR: There is no difference between the files</p>
+<div id="load-in-data" class="section level2">
+<h2>load in data</h2>
 <pre class="r"><code>foreign::read.dta( &#39;../benzodiazepine/data/nobackup/match_multiyear.v2.dta&#39;) %&gt;%
   as_tibble() %&gt;%
   { . } -&gt; df_my
@@ -701,6 +736,7 @@ wflow_publish(“analysis/no_difference.Rmd”)
 foreign::read.dta( &#39;../benzodiazepine/data/nobackup/match_single_period.v1.dta&#39;) %&gt;%
   as_tibble() %&gt;%
   { . } -&gt; df_sp</code></pre>
+</div>
 <div id="summarise-the-multiyear-data" class="section level2">
 <h2>summarise the multiyear data</h2>
 <pre class="r"><code>  df_my %&gt;%
@@ -785,7 +821,6 @@ loaded via a namespace (and not attached):
 [51] crayon_1.3.4       lattice_0.20-40    haven_2.2.0        hms_0.5.3          pillar_1.4.3       codetools_0.2-16   XML_3.99-0.3       reprex_0.3.0       glue_1.3.2         evaluate_0.14     
 [61] modelr_0.1.6       png_0.1-7          vctrs_0.2.4        cellranger_1.1.0   gtable_0.3.0       assertthat_0.2.1   xfun_0.11          lwgeom_0.2-0       broom_0.5.5        e1071_1.7-3       
 [71] viridisLite_0.3.0  class_7.3-15       units_0.6-6       </code></pre>
-</div>
 </div>
 </div>
 
